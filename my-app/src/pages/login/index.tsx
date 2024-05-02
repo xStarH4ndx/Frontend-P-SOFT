@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
+import { useNotification } from "../../context/notification.context";
 
 
 type LoginType = {
@@ -8,6 +9,7 @@ type LoginType = {
 };
 
 export const LoginPage: React.FC<{}> = () =>{
+    const { getError, getSucces} = useNotification();
     const [loginData, setLoginData]= React.useState<LoginType>({
         username:"",
         password:"",
