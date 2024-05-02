@@ -63,5 +63,5 @@ export const ThemeConfig: React.FC<ThemeProp> = ({children}) =>{
             <CssBaseline />
             {children}
         </ThemeProvider>
-    )
+    );
 };

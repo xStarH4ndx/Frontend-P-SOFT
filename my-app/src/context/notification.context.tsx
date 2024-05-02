@@ -30,10 +30,10 @@ export const NotificationProvider: React.FC<{children: JSX.Element}> = ({childre
     };
     return (
         <NotificationContext.Provider value={value}>
-            <Notification 
-                handleClose={handleClose} 
-                open={open} 
-                severity={severity} 
+            <Notification
+                handleClose={handleClose}
+                open={open}
+                severity={severity}
                 msg={msg}
             />
             {children}
