@@ -94,6 +94,9 @@ export const RegisterPage: React.FC<{}> = () => {
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
                                 onChange={handleChange}
+                                InputLabelProps={{ shrink: true }}  // Añade esto para que la etiqueta no se solape con el campo vacío
+                                defaultValue=""  // Establece el valor por defecto como vacío
+                                
                             />
                             <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>Registrarse</Button>
                         </Box>
