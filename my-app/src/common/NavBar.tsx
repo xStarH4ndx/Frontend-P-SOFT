@@ -1,11 +1,13 @@
 import React from "react";
 import { AppBar, Box, Button, Container, Grid, Stack, Toolbar } from "@mui/material";
 import Logo from '../assets/images/logo-empresa.png';
+import { useNavigate } from "react-router-dom";
 
 export const NavBar: React.FC<{}> = () => {
+    const navigate = useNavigate()
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="fixed">
+            <AppBar position="sticky">
                 <Toolbar>
                     <Container maxWidth="xl">
                         <Grid container
@@ -30,8 +32,8 @@ export const NavBar: React.FC<{}> = () => {
                                     </ul>
                                 </nav>
                                 <Stack direction="row" spacing={2}>
-                                    <Button variant="contained">Sign in</Button>
-                                    <Button variant="outlined">Login</Button>
+                                    <Button variant="contained" onClick={()=> navigate("login")}>Login</Button>
+                                    <Button variant="outlined">Sing in</Button>
                                 </Stack>
                             </Grid>
                         </Grid>

@@ -3,6 +3,8 @@ import { Route, Routes } from "react-router-dom"
 import { HomePage } from "./pages/home";
 import { LoginPage } from "./pages/login";
 import { RouterLayout } from "./common/RouterLayout";
+import { RecoveryPage } from "./pages/registro/recuperarContra";
+
 
 export const AppRouter: React.FC<{}> = () =>{
     return (
@@ -11,6 +13,7 @@ export const AppRouter: React.FC<{}> = () =>{
                 <Route path="/" element={<HomePage/>} />
             </Route>
             <Route path="/login" element={<LoginPage/>} />
+            <Route path="/recuperarContra" element={<RecoveryPage />} /> 
         </Routes>
     )
 };
