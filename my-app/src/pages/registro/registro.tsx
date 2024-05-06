@@ -47,7 +47,7 @@ export const RegisterPage: React.FC<{}> = () => {
                         <Typography variant="h4">Registrarse</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <TextField
-                                name="name"
+                                name="username"
                                 margin="normal"
                                 fullWidth
                                 label="Nombre"

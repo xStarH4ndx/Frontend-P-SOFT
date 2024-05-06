@@ -33,7 +33,7 @@ export const NavBar: React.FC<{}> = () => {
                                 </nav>
                                 <Stack direction="row" spacing={2}>
                                     <Button variant="contained" onClick={()=> navigate("login")}>Login</Button>
-                                    <Button variant="outlined">Sing in</Button>
+                                    <Button variant="outlined" onClick={()=> navigate("registro")}>Sign in</Button>
                                 </Stack>
                             </Grid>
                         </Grid>

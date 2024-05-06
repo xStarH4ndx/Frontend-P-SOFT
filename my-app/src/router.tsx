@@ -3,7 +3,8 @@ import { Route, Routes } from "react-router-dom"
 import { HomePage } from "./pages/home";
 import { LoginPage } from "./pages/login";
 import { RouterLayout } from "./common/RouterLayout";
-import { RecoveryPage } from "./pages/registro/recuperarContra";
+import { RecoveryPage } from "./pages/nnuevo/recuperarContra";
+import { RegisterPage } from "./pages/registro/registro";
 
 
 export const AppRouter: React.FC<{}> = () =>{
@@ -13,7 +14,8 @@ export const AppRouter: React.FC<{}> = () =>{
                 <Route path="/" element={<HomePage/>} />
             </Route>
             <Route path="/login" element={<LoginPage/>} />
-            <Route path="/recuperarContra" element={<RecoveryPage />} /> 
+            <Route path="/registro" element={<RegisterPage/>} /> 
+            <Route path="/login/recuperarContra" element={<RecoveryPage />} /> 
         </Routes>
     )
 };
