@@ -3,6 +3,8 @@ import { AppBar, Box, Button, Container, Grid, Stack, Toolbar } from "@mui/mater
 import Logo from '../assets/images/logo-empresa.png';
 import { useNavigate } from "react-router-dom";
 
+//LOCAL STORAGE -----> GUARDAR EL ESTADO DEL USUARIO (REGISTRADO O NO) (PUEDO PONER UN BOLEANO)
+
 export const NavBar: React.FC<{}> = () => {
     const navigate = useNavigate()
     return (
