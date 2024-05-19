@@ -25,6 +25,9 @@ export const LoginPage: React.FC<{}> = () => {
         e.preventDefault();
         LoginValidate.validate(loginData).then(() => {
             getSucces(JSON.stringify(loginData));
+
+            //Preguntamos a la base de datos si existe la cuenta
+
         }).catch((error) => {
             getError(error.message);
         });
