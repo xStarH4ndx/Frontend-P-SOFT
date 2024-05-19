@@ -10,7 +10,7 @@ type LoginType = {
 };
 
 export const LoginPage: React.FC<{}> = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { getError, getSucces } = useNotification();
     const [loginData, setLoginData] = React.useState<LoginType>({
         username: "",
