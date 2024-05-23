@@ -3,6 +3,9 @@ import { Container, Paper, Grid, Typography, Divider, TextField, Button, Menu, M
 import { useNavigate } from "react-router";
 
 const elementos = [
+
+    /* listarServicios*/
+
     { servicio: "Informática", nombre: "Juan Perez", edad: 30, ubicacion: "Ciudad A", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, El saldaño es un crack, el mas capito, se las sabe todas, es un grande, nota siete promedio siete la mea vola compañero, de la galactica oiste bb prrrrr, lo iluminati.", precio: 99999 },
     { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, ubicacion: "Ciudad B", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
     { servicio: "Informática", nombre: "Ana Gómez", edad: 25, ubicacion: "Ciudad C", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
@@ -71,9 +74,15 @@ export const ServicePage: React.FC<{}> = () => {
                     <Grid item>
                         <Button
                             variant="contained"
-                            color="primary"
+                            sx={{ 
+                                height: '50px', 
+                                borderRadius: 1, 
+                                backgroundColor: '#D2691E', 
+                                '&:hover': {
+                                    backgroundColor: '#A0522D',
+                                }
+                            }}
                             onClick={handleClick}
-                            sx={{height: '50px', borderRadius: 1}}
                         >
                             Filtrar por
                         </Button>
