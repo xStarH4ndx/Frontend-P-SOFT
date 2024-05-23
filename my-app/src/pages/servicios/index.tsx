@@ -71,9 +71,15 @@ export const ServicePage: React.FC<{}> = () => {
                     <Grid item>
                         <Button
                             variant="contained"
-                            color="primary"
+                            sx={{ 
+                                height: '50px', 
+                                borderRadius: 1, 
+                                backgroundColor: '#D2691E', 
+                                '&:hover': {
+                                    backgroundColor: '#A0522D',
+                                }
+                            }}
                             onClick={handleClick}
-                            sx={{height: '50px', borderRadius: 1}}
                         >
                             Filtrar por
                         </Button>
