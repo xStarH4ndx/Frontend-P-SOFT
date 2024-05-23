@@ -3,12 +3,12 @@ import { Container, Paper, Grid, Typography, Divider, TextField, Button, Menu, M
 import { useNavigate } from "react-router";
 
 const elementos = [
-    { servicio: "Informática", nombre: "Juan Perez", edad: 30, ubicacion: "Ciudad A", direccion: "Direccion A", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, etc.", precio: 99999 },
-    { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, ubicacion: "Ciudad B", direccion: "Direccion B", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
-    { servicio: "Informática", nombre: "Ana Gómez", edad: 25, ubicacion: "Ciudad C", direccion: "Direccion C", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
-    { servicio: "Gasfiter", nombre: "Maria Rodriguez", edad: 35, ubicacion: "Ciudad D", direccion: "Direccion D", ranking: 3.9, img: "https://via.placeholder.com/150", descripcion: "Mantenimiento de sistemas de agua y gas.", precio: 14500 },
-    { servicio: "Informática", nombre: "Pedro Sanchez", edad: 28, ubicacion: "Ciudad E", direccion: "Direccion E", ranking: 4.7, img: "https://via.placeholder.com/150", descripcion: "Optimización de sistemas y redes.", precio: 65000 },
-    { servicio: "Gasfiter", nombre: "Luis Garcia", edad: 45, ubicacion: "Ciudad F", direccion: "Direccion F", ranking: 4.2, img: "https://via.placeholder.com/150", descripcion: "Servicio completo de gasfitería.", precio: 37990 }
+    { servicio: "Informática", nombre: "Juan Perez", edad: 30, direccion: "Pje. Los Plátanos 9", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, etc.", precio: 99999 },
+    { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, direccion: "Bellamar 1188", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
+    { servicio: "Informática", nombre: "Ana Gómez", edad: 25, direccion: "Av. José Joaquín Pérez 3424", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
+    { servicio: "Gasfiter", nombre: "Maria Rodriguez", edad: 35, direccion: "Enjoy Coquimbo", ranking: 3.9, img: "https://via.placeholder.com/150", descripcion: "Mantenimiento de sistemas de agua y gas.", precio: 14500 },
+    { servicio: "Informática", nombre: "Pedro Sanchez", edad: 28, direccion: "Parque Pedro de Valdivia", ranking: 4.7, img: "https://via.placeholder.com/150", descripcion: "Optimización de sistemas y redes.", precio: 65000 },
+    { servicio: "Gasfiter", nombre: "Luis Garcia", edad: 45, direccion: "Movistar Arena Santiago", ranking: 4.2, img: "https://via.placeholder.com/150", descripcion: "Servicio completo de gasfitería.", precio: 37990 }
 ];
 
 export const ServicePage: React.FC<{}> = () => {
@@ -102,7 +102,7 @@ export const ServicePage: React.FC<{}> = () => {
                                         <Typography variant="h6">{`Servicio: ${elemento.servicio}`}</Typography>
                                         <Typography variant="body1">{`Nombre: ${elemento.nombre}`}</Typography>
                                         <Typography variant="body1">{`Edad: ${elemento.edad}`}</Typography>
-                                        <Typography variant="body1">{`Ubicación: ${elemento.ubicacion}`}</Typography>
+                                        <Typography variant="body1">{`Dirección: ${elemento.direccion}`}</Typography>
                                         <Typography variant="body1">{`Ranking: ${elemento.ranking}`}</Typography>
                                     </Grid>
                                     <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
