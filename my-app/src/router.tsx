@@ -6,8 +6,7 @@ import { RouterLayout } from "./common/RouterLayout";
 import { RecoveryPage } from "./pages/nnuevo/recuperarContra";
 import { RegisterPage } from "./pages/registro/registro";
 import { ServicePage } from "./pages/servicios";
-import { ConfirmServicePage } from "./pages/servicios/confirmServices";
-
+import ConfirmServicePage from "./pages/servicios/confirmServices";
 
 export const AppRouter: React.FC<{}> = () =>{
     return (

@@ -3,15 +3,12 @@ import { Container, Paper, Grid, Typography, Divider, TextField, Button, Menu, M
 import { useNavigate } from "react-router";
 
 const elementos = [
-
-    /* listarServicios*/
-
-    { servicio: "Informática", nombre: "Juan Perez", edad: 30, ubicacion: "Ciudad A", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, El saldaño es un crack, el mas capito, se las sabe todas, es un grande, nota siete promedio siete la mea vola compañero, de la galactica oiste bb prrrrr, lo iluminati.", precio: 99999 },
-    { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, ubicacion: "Ciudad B", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
-    { servicio: "Informática", nombre: "Ana Gómez", edad: 25, ubicacion: "Ciudad C", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
-    { servicio: "Gasfiter", nombre: "Maria Rodriguez", edad: 35, ubicacion: "Ciudad D", ranking: 3.9, img: "https://via.placeholder.com/150", descripcion: "Mantenimiento de sistemas de agua y gas.", precio: 14500 },
-    { servicio: "Informática", nombre: "Pedro Sanchez", edad: 28, ubicacion: "Ciudad E", ranking: 4.7, img: "https://via.placeholder.com/150", descripcion: "Optimización de sistemas y redes.", precio: 65000 },
-    { servicio: "Gasfiter", nombre: "Luis Garcia", edad: 45, ubicacion: "Ciudad F", ranking: 4.2, img: "https://via.placeholder.com/150", descripcion: "Servicio completo de gasfitería.", precio: 37990 }
+    { servicio: "Informática", nombre: "Juan Perez", edad: 30, ubicacion: "Ciudad A", direccion: "Direccion A", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, etc.", precio: 99999 },
+    { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, ubicacion: "Ciudad B", direccion: "Direccion B", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
+    { servicio: "Informática", nombre: "Ana Gómez", edad: 25, ubicacion: "Ciudad C", direccion: "Direccion C", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
+    { servicio: "Gasfiter", nombre: "Maria Rodriguez", edad: 35, ubicacion: "Ciudad D", direccion: "Direccion D", ranking: 3.9, img: "https://via.placeholder.com/150", descripcion: "Mantenimiento de sistemas de agua y gas.", precio: 14500 },
+    { servicio: "Informática", nombre: "Pedro Sanchez", edad: 28, ubicacion: "Ciudad E", direccion: "Direccion E", ranking: 4.7, img: "https://via.placeholder.com/150", descripcion: "Optimización de sistemas y redes.", precio: 65000 },
+    { servicio: "Gasfiter", nombre: "Luis Garcia", edad: 45, ubicacion: "Ciudad F", direccion: "Direccion F", ranking: 4.2, img: "https://via.placeholder.com/150", descripcion: "Servicio completo de gasfitería.", precio: 37990 }
 ];
 
 export const ServicePage: React.FC<{}> = () => {
@@ -41,11 +38,6 @@ export const ServicePage: React.FC<{}> = () => {
         handleClose();
     };
 
-    const handleRequestService = (nombre: string) => {
-        console.log(`Solicitar servicio de: ${nombre}`);
-        // Aquí puedes añadir la lógica para solicitar el servicio
-    };
-
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
         const filtered = elementos.filter(elemento =>
@@ -56,6 +48,10 @@ export const ServicePage: React.FC<{}> = () => {
         setFilteredElementos(filtered);
     };
 
+    const handleRequestService = (elemento: any) => {
+        navigate("confirmacion", { state: { ...elemento } });
+    };
+
     return (
         <Container>
             <Grid container direction="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
@@ -64,7 +60,7 @@ export const ServicePage: React.FC<{}> = () => {
                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                     <Grid item>
                         <TextField
-                            sx={{width:"800px"}}
+                            sx={{ width: "800px" }}
                             label="Buscar servicios"
                             variant="outlined"
                             value={searchTerm}
@@ -74,10 +70,10 @@ export const ServicePage: React.FC<{}> = () => {
                     <Grid item>
                         <Button
                             variant="contained"
-                            sx={{ 
-                                height: '50px', 
-                                borderRadius: 1, 
-                                backgroundColor: '#D2691E', 
+                            sx={{
+                                height: '50px',
+                                borderRadius: 1,
+                                backgroundColor: '#D2691E',
                                 '&:hover': {
                                     backgroundColor: '#A0522D',
                                 }
@@ -121,8 +117,8 @@ export const ServicePage: React.FC<{}> = () => {
                                         <Typography variant="body2" sx={{ mb: 2 }}>{elemento.descripcion}</Typography>
                                         <Button
                                             variant="contained"
-                                            color= "primary"
-                                            onClick={() => handleRequestService(elemento.nombre)}
+                                            color="primary"
+                                            onClick={() => handleRequestService(elemento)}
                                         >
                                             Solicitar {elemento.precio} CLP
                                         </Button>
