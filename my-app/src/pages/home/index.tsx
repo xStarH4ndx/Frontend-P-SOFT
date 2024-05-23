@@ -1,15 +1,16 @@
 import React from "react";
 import { Button, Container, Divider, Grid, Paper, Typography } from '@mui/material';
 import { HeaderComponent } from "../../components";
+import { useNavigate } from "react-router";
 
 export const HomePage: React.FC<{}> = () =>{
-    
+    const navigate = useNavigate()
     return (
         <Container maxWidth="xl">
             <HeaderComponent 
                 title="Bienvenido"
                 description="¡Pide tus servicios ahora!"
-                element={<Button fullWidth variant="contained">Ver Todos los Servicios</Button>}
+                element={<Button fullWidth variant="contained" onClick={()=> navigate("servicios")}>Ver Todos los Servicios</Button>}
             />
             <div>
                 <Divider sx={{ marginTop: "20px" }}/>

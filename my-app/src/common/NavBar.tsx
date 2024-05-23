@@ -3,6 +3,8 @@ import { AppBar, Box, Button, Container, Grid, Stack, Toolbar } from "@mui/mater
 import Logo from '../assets/images/logo-empresa.png';
 import { useNavigate } from "react-router-dom";
 
+//LOCAL STORAGE -----> GUARDAR EL ESTADO DEL USUARIO (REGISTRADO O NO) (PUEDO PONER UN BOLEANO)
+
 export const NavBar: React.FC<{}> = () => {
     const navigate = useNavigate()
     return (
@@ -16,21 +18,13 @@ export const NavBar: React.FC<{}> = () => {
                             alignItems="center"
                             spacing={2} // Espaciado entre los elementos del Grid
                         >
-                            <Grid item container alignItems="center" xs={6}> {/* Ancho del 50% */}
+                            <Grid item container alignItems="center" xs={5}> {/* Ancho del 50% */}
                                 <img src={Logo} alt="Logo de la empresa" style={{ maxWidth: "60px", width: "100%", display: "flex" }} />
                                 <h2 style={{ color: "#fff", fontSize: "2rem", fontWeight: "300", marginLeft: "10px" }}>
                                     People<span style={{ fontWeight: "bold" }}>Now</span>
                                 </h2>
                             </Grid>
-                            <Grid item container alignItems="center" xs={6}> {/* Ancho del 50% */}
-                                {/* Navegador */}
-                                <nav style={{ marginRight: "auto" }}>
-                                    <ul style={{ display: "flex", listStyle: "none", padding: 0, fontFamily: 'Poppins, sans-serif', fontSize: "1rem", color: "#fff" }}>
-                                        <li style={{ marginRight: "20px" }}><a href="/">Inicio</a></li>
-                                        <li style={{ marginRight: "20px" }}><a href="/">Servicios</a></li>
-                                        <li><a href="/">Ayuda</a></li>
-                                    </ul>
-                                </nav>
+                            <Grid item container alignItems="center" xs={2}>
                                 <Stack direction="row" spacing={2}>
                                     <Button variant="contained" onClick={()=> navigate("login")}>Login</Button>
                                     <Button variant="outlined" onClick={()=> navigate("registro")}>Sign in</Button>
