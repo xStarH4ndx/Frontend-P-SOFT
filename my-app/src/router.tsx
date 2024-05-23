@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/login";
 import { RouterLayout } from "./common/RouterLayout";
 import { RecoveryPage } from "./pages/nnuevo/recuperarContra";
 import { RegisterPage } from "./pages/registro/registro";
+import { CreateServicePage } from "./pages/nnuevo/servicio";
 
 
 export const AppRouter: React.FC<{}> = () =>{
@@ -15,7 +16,8 @@ export const AppRouter: React.FC<{}> = () =>{
             </Route>
             <Route path="/login" element={<LoginPage/>} />
             <Route path="/registro" element={<RegisterPage/>} /> 
-            <Route path="/login/recuperarContra" element={<RecoveryPage />} /> 
+            <Route path="/login/recuperarContra" element={<RecoveryPage />} />
+            <Route path="/nnuevo/servicio" element={<CreateServicePage />} />
         </Routes>
     )
 };

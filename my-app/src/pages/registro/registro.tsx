@@ -1,12 +1,12 @@
-import React, { useState } from "react";
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
+import React, { useState } from "react";
 
 type RegisterType = {
     username: string;
     email: string;
     password: string;
     confirmPassword: string;
-    birthdate: string;
+    phone: string;
 };
 
 export const RegisterPage: React.FC<{}> = () => {
@@ -15,7 +15,7 @@ export const RegisterPage: React.FC<{}> = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        birthdate: "",
+        phone: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,11 +86,10 @@ export const RegisterPage: React.FC<{}> = () => {
                                 onChange={handleChange}
                             />
                             <TextField
-                                name="birthdate"
+                                name="phone"
                                 margin="normal"
-                                type="date"
                                 fullWidth
-                                label="Fecha de nacimiento"
+                                label="telefono"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
                                 onChange={handleChange}
