@@ -31,8 +31,8 @@ export const ServicePage: React.FC<{}> = () => {
             sortedElementos.sort((a, b) => b.precio - a.precio);
         } else if (option === 'Menor Precio') {
             sortedElementos.sort((a, b) => a.precio - b.precio);
-        } else {
-            sortedElementos = elementos.filter(elemento => elemento.servicio === option);
+        } else if (option === 'Por Ranking') {
+            sortedElementos.sort((a, b) => b.ranking - a.ranking);
         }
         setFilteredElementos(sortedElementos);
         handleClose();
@@ -69,15 +69,9 @@ export const ServicePage: React.FC<{}> = () => {
                     </Grid>
                     <Grid item>
                         <Button
-                            variant="contained"
-                            sx={{
-                                height: '50px',
-                                borderRadius: 1,
-                                backgroundColor: '#D2691E',
-                                '&:hover': {
-                                    backgroundColor: '#A0522D',
-                                }
-                            }}
+                            variant="outlined"
+                            sx={{height: '50px', borderRadius: 1}}
+                            color="secondary"
                             onClick={handleClick}
                         >
                             Filtrar por
@@ -89,8 +83,7 @@ export const ServicePage: React.FC<{}> = () => {
                         >
                             <MenuItem onClick={() => handleMenuItemClick('Mayor Precio')}>Mayor Precio</MenuItem>
                             <MenuItem onClick={() => handleMenuItemClick('Menor Precio')}>Menor Precio</MenuItem>
-                            <MenuItem onClick={() => handleMenuItemClick('Informática')}>Informática</MenuItem>
-                            <MenuItem onClick={() => handleMenuItemClick('Gasfiter')}>Gasfiter</MenuItem>
+                            <MenuItem onClick={() => handleMenuItemClick('Por Ranking')}>Por Ranking</MenuItem>
                         </Menu>
                     </Grid>
                 </Grid>
@@ -99,6 +92,7 @@ export const ServicePage: React.FC<{}> = () => {
                 {filteredElementos.length > 0 ? (
                     filteredElementos.map((elemento, index) => (
                         <Grid item key={index} sx={{ width: '100%' }}>
+                            {/* SE HACE UN PAPER POR CADA ELEMENTO DE LA LISTA */}
                             <Paper sx={{ borderRadius: "1.5em", height: "auto", mt: 3, display: 'flex', alignItems: 'center', p: 2 }}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
