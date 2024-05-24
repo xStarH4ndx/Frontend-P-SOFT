@@ -1,25 +1,36 @@
 import React, { useState } from "react";
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
+import { useMutation } from '@apollo/client';
+import { FORGOT_PASSWORD } from '../../graphql/mutations';
+import { useNotification } from "../../context/notification.context";
 
 type RecoveryType = {
     email: string;
 };
 
 export const RecoveryPage: React.FC<{}> = () => {
+    const { getError, getSucces } = useNotification();
     const [recoveryData, setRecoveryData] = useState<RecoveryType>({
         email: "",
     });
+
+    const [forgotPassword, { loading, error, data }] = useMutation(FORGOT_PASSWORD);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setRecoveryData({ ...recoveryData, [name]: value });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(recoveryData.email);
-        // Aquí podrías enviar los datos a tu servidor para procesar la solicitud de recuperación de contraseña
-        // Por ejemplo, puedes llamar a una API para enviar un correo con instrucciones para restablecer la contraseña
+        try {
+            const response = await forgotPassword({
+                variables: { email: recoveryData.email }
+            });
+            getSucces("Correo de recuperación enviado");
+        } catch (error: any) {
+            getError(error.message);
+        }
     };
 
     return (
@@ -45,7 +56,9 @@ export const RecoveryPage: React.FC<{}> = () => {
                                 required
                                 onChange={handleChange}
                             />
-                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>Enviar Correo de Recuperación</Button>
+                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }} disabled={loading}>
+                                {loading ? "Enviando..." : "Enviar Correo de Recuperación"}
+                            </Button>
                         </Box>
                     </Paper>
                 </Grid>

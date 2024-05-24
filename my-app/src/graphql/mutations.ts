@@ -48,3 +48,21 @@ export const UPDATE_PASSWORD_BY_CODE = gql`
     updatePasswordByCode(code: $code, password: $password)
   }
 `;
+
+// para el login
+// src/graphql/mutations.ts
+
+export const LOGIN = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      token
+      user {
+        id
+        username
+        firstname
+        lastname
+      }
+    }
+  }
+`;
+

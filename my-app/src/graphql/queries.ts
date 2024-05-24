@@ -1,4 +1,3 @@
-// src/graphql/queries.ts
 import { gql } from '@apollo/client';
 
 export const LISTAR_USUARIOS = gql`

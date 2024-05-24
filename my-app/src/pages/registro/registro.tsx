@@ -1,5 +1,9 @@
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
 import React, { useState } from "react";
+import { useMutation } from '@apollo/client';
+import { CREAR_USUARIO } from '../../graphql/mutations';
+import { useNotification } from "../../context/notification.context";
+import { useNavigate } from "react-router-dom";
 
 type RegisterType = {
     username: string;
@@ -10,6 +14,8 @@ type RegisterType = {
 };
 
 export const RegisterPage: React.FC<{}> = () => {
+    const navigate = useNavigate();
+    const { getError, getSucces } = useNotification();
     const [registerData, setRegisterData] = useState<RegisterType>({
         username: "",
         email: "",
@@ -18,19 +24,39 @@ export const RegisterPage: React.FC<{}> = () => {
         phone: "",
     });
 
+    const [crearUsuario, { loading, error, data }] = useMutation(CREAR_USUARIO);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setRegisterData({ ...registerData, [name]: value });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (registerData.password !== registerData.confirmPassword) {
-            alert("Las contraseñas no coinciden");
+            getError("Las contraseñas no coinciden");
             return;
         }
-        console.log(registerData);
-        // Aquí podrías enviar los datos a tu servidor o realizar otras acciones
+        try {
+            const response = await crearUsuario({
+                variables: {
+                    usuario: {
+                        username: registerData.username,
+                        password: registerData.password,
+                        firstname: registerData.username,
+                        lastname: "",
+                        telephone: registerData.phone,
+                        enabled: true,
+                        accountLocked: false,
+                        roles: []
+                    }
+                }
+            });
+            getSucces("Registro exitoso");
+            navigate("/login"); // Redirige a la página de inicio de sesión
+        } catch (error: any) {
+            getError(error.message);
+        }
     };
 
     return (
@@ -89,13 +115,12 @@ export const RegisterPage: React.FC<{}> = () => {
                                 name="phone"
                                 margin="normal"
                                 fullWidth
-                                label="telefono"
+                                label="Telefono"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
                                 onChange={handleChange}
                                 InputLabelProps={{ shrink: true }}  // Añade esto para que la etiqueta no se solape con el campo vacío
                                 defaultValue=""  // Establece el valor por defecto como vacío
-                                
                             />
                             <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>Registrarse</Button>
                         </Box>
