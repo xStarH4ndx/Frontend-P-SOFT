@@ -35,10 +35,10 @@ export const LoginPage: React.FC<{}> = () => {
             // Almacenar el token en localStorage o en un contexto global
             localStorage.setItem('token', token);
 
-            getSucces(`Welcome, ${user.firstname} ${user.lastname}`);
+            getSucces(`Bienvenido, ${user.firstname} ${user.lastname}`);
             navigate("/"); // Redirige a la página de inicio u otra página
         } catch (error: any) {
-            getError(error.message);
+            getError(`Credenciales Incorrectas`);
         }
     };
 

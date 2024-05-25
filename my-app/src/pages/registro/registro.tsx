@@ -55,7 +55,7 @@ export const RegisterPage: React.FC<{}> = () => {
             getSucces("Registro exitoso");
             navigate("/login"); // Redirige a la página de inicio de sesión
         } catch (error: any) {
-            getError(error.message);
+            getError(`El correo ya está registrado`);
         }
     };
 

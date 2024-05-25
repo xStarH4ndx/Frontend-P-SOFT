@@ -29,7 +29,7 @@ export const RecoveryPage: React.FC<{}> = () => {
             });
             getSucces("Correo de recuperación enviado");
         } catch (error: any) {
-            getError(error.message);
+            getError(`Correo inválido`);
         }
     };
 
