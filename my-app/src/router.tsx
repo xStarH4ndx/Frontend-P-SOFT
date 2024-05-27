@@ -20,7 +20,7 @@ export const AppRouter: React.FC<{}> = () =>{
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/recuperarContra" element={<RecoveryPage />} />
             <Route path="/pages/registro/registro" element={<RegisterPage/>} />
-            <Route path="/mis-servicios" element={<ServicePage />} />
+            <Route path="/mis-servicios" element={<UserServicePage />} />
             <Route path="/crear-servicio" element={<CreateServicePage />} />
         </Routes>
     );
