@@ -8,6 +8,7 @@ import { ServicePage } from "./pages/servicios";
 import ConfirmServicePage from "./pages/servicios/confirmServices";
 import { RegisterPage } from "./pages/registro/registro";
 import { CreateServicePage } from "./pages/nnuevo/servicio";
+import { UserServicePage }from './perfil/UserServicesPage';
 
 export const AppRouter: React.FC<{}> = () =>{
     return (

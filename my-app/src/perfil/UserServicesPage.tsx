@@ -3,7 +3,7 @@ import { Container, Paper, Grid, Typography, Divider, Button, Avatar } from '@mu
 import { useNavigate } from 'react-router';
 import { useUserContext } from './UserContext';
 
-export const ServicePage: React.FC = () => {
+export const UserServicePage: React.FC = () => {
     const navigate = useNavigate();
     const { user, services, setServices } = useUserContext();
 
