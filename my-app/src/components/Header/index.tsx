@@ -19,7 +19,7 @@ export const HeaderComponent: React.FC<HeaderProps> = ({ title, description, ele
                 sx={{ height: "100%" }}
             >
                 <Grid item xs={12} md={6} lg={5}>
-                    <Box sx={{ textAlign: "center" }}>
+                    <Box sx={{ mt:2 , textAlign: "center" }}>
                         <Typography variant="h1">{title}</Typography>
                         <Typography variant="body1">{description}</Typography>
                         {element && (

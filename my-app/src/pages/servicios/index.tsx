@@ -3,12 +3,12 @@ import { Container, Paper, Grid, Typography, Divider, TextField, Button, Menu, M
 import { useNavigate } from "react-router";
 
 const elementos = [
-    { servicio: "Informática", nombre: "Juan Perez", edad: 30, ubicacion: "Ciudad A", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, El saldaño es un crack, el mas capito, se las sabe todas, es un grande, nota siete promedio siete la mea vola compañero, de la galactica oiste bb prrrrr, lo iluminati.", precio: 99999 },
-    { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, ubicacion: "Ciudad B", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
-    { servicio: "Informática", nombre: "Ana Gómez", edad: 25, ubicacion: "Ciudad C", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
-    { servicio: "Gasfiter", nombre: "Maria Rodriguez", edad: 35, ubicacion: "Ciudad D", ranking: 3.9, img: "https://via.placeholder.com/150", descripcion: "Mantenimiento de sistemas de agua y gas.", precio: 14500 },
-    { servicio: "Informática", nombre: "Pedro Sanchez", edad: 28, ubicacion: "Ciudad E", ranking: 4.7, img: "https://via.placeholder.com/150", descripcion: "Optimización de sistemas y redes.", precio: 65000 },
-    { servicio: "Gasfiter", nombre: "Luis Garcia", edad: 45, ubicacion: "Ciudad F", ranking: 4.2, img: "https://via.placeholder.com/150", descripcion: "Servicio completo de gasfitería.", precio: 37990 }
+    { servicio: "Informática", nombre: "Juan Perez", edad: 30, direccion: "Pje. Los Plátanos 9", ranking: 4.5, img: "https://via.placeholder.com/150", descripcion: "Hago reparaciones de celulares, cambios de pantalla, cambios de batería. Arreglo computadores, intercambio piezas, etc.", precio: 99999 },
+    { servicio: "Gasfiter", nombre: "Carlos López", edad: 40, direccion: "Bellamar 1188", ranking: 4.0, img: "https://via.placeholder.com/150", descripcion: "Instalación y reparación de sistemas de plomería.", precio: 10000 },
+    { servicio: "Informática", nombre: "Ana Gómez", edad: 25, direccion: "Av. José Joaquín Pérez 3424", ranking: 4.8, img: "https://via.placeholder.com/150", descripcion: "Asesoría en software y hardware.", precio: 35000 },
+    { servicio: "Gasfiter", nombre: "Maria Rodriguez", edad: 35, direccion: "Enjoy Coquimbo", ranking: 3.9, img: "https://via.placeholder.com/150", descripcion: "Mantenimiento de sistemas de agua y gas.", precio: 14500 },
+    { servicio: "Informática", nombre: "Pedro Sanchez", edad: 28, direccion: "Parque Pedro de Valdivia", ranking: 4.7, img: "https://via.placeholder.com/150", descripcion: "Optimización de sistemas y redes.", precio: 65000 },
+    { servicio: "Gasfiter", nombre: "Luis Garcia", edad: 45, direccion: "Movistar Arena Santiago", ranking: 4.2, img: "https://via.placeholder.com/150", descripcion: "Servicio completo de gasfitería.", precio: 37990 }
 ];
 
 export const ServicePage: React.FC<{}> = () => {
@@ -31,16 +31,11 @@ export const ServicePage: React.FC<{}> = () => {
             sortedElementos.sort((a, b) => b.precio - a.precio);
         } else if (option === 'Menor Precio') {
             sortedElementos.sort((a, b) => a.precio - b.precio);
-        } else {
-            sortedElementos = elementos.filter(elemento => elemento.servicio === option);
+        } else if (option === 'Por Ranking') {
+            sortedElementos.sort((a, b) => b.ranking - a.ranking);
         }
         setFilteredElementos(sortedElementos);
         handleClose();
-    };
-
-    const handleRequestService = (nombre: string) => {
-        console.log(`Solicitar servicio de: ${nombre}`);
-        // Aquí puedes añadir la lógica para solicitar el servicio
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +48,10 @@ export const ServicePage: React.FC<{}> = () => {
         setFilteredElementos(filtered);
     };
 
+    const handleRequestService = (elemento: any) => {
+        navigate("confirmacion", { state: { ...elemento } });
+    };
+
     return (
         <Container>
             <Grid container direction="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
@@ -61,7 +60,7 @@ export const ServicePage: React.FC<{}> = () => {
                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                     <Grid item>
                         <TextField
-                            sx={{width:"800px"}}
+                            sx={{ width: "800px" }}
                             label="Buscar servicios"
                             variant="outlined"
                             value={searchTerm}
@@ -70,15 +69,9 @@ export const ServicePage: React.FC<{}> = () => {
                     </Grid>
                     <Grid item>
                         <Button
-                            variant="contained"
-                            sx={{ 
-                                height: '50px', 
-                                borderRadius: 1, 
-                                backgroundColor: '#D2691E', 
-                                '&:hover': {
-                                    backgroundColor: '#A0522D',
-                                }
-                            }}
+                            variant="outlined"
+                            sx={{height: '50px', borderRadius: 1}}
+                            color="secondary"
                             onClick={handleClick}
                         >
                             Filtrar por
@@ -90,8 +83,7 @@ export const ServicePage: React.FC<{}> = () => {
                         >
                             <MenuItem onClick={() => handleMenuItemClick('Mayor Precio')}>Mayor Precio</MenuItem>
                             <MenuItem onClick={() => handleMenuItemClick('Menor Precio')}>Menor Precio</MenuItem>
-                            <MenuItem onClick={() => handleMenuItemClick('Informática')}>Informática</MenuItem>
-                            <MenuItem onClick={() => handleMenuItemClick('Gasfiter')}>Gasfiter</MenuItem>
+                            <MenuItem onClick={() => handleMenuItemClick('Por Ranking')}>Por Ranking</MenuItem>
                         </Menu>
                     </Grid>
                 </Grid>
@@ -100,6 +92,7 @@ export const ServicePage: React.FC<{}> = () => {
                 {filteredElementos.length > 0 ? (
                     filteredElementos.map((elemento, index) => (
                         <Grid item key={index} sx={{ width: '100%' }}>
+                            {/* SE HACE UN PAPER POR CADA ELEMENTO DE LA LISTA */}
                             <Paper sx={{ borderRadius: "1.5em", height: "auto", mt: 3, display: 'flex', alignItems: 'center', p: 2 }}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -109,7 +102,7 @@ export const ServicePage: React.FC<{}> = () => {
                                         <Typography variant="h6">{`Servicio: ${elemento.servicio}`}</Typography>
                                         <Typography variant="body1">{`Nombre: ${elemento.nombre}`}</Typography>
                                         <Typography variant="body1">{`Edad: ${elemento.edad}`}</Typography>
-                                        <Typography variant="body1">{`Ubicación: ${elemento.ubicacion}`}</Typography>
+                                        <Typography variant="body1">{`Dirección: ${elemento.direccion}`}</Typography>
                                         <Typography variant="body1">{`Ranking: ${elemento.ranking}`}</Typography>
                                     </Grid>
                                     <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -118,8 +111,8 @@ export const ServicePage: React.FC<{}> = () => {
                                         <Typography variant="body2" sx={{ mb: 2 }}>{elemento.descripcion}</Typography>
                                         <Button
                                             variant="contained"
-                                            color= "primary"
-                                            onClick={() => handleRequestService(elemento.nombre)}
+                                            color="primary"
+                                            onClick={() => handleRequestService(elemento)}
                                         >
                                             Solicitar {elemento.precio} CLP
                                         </Button>

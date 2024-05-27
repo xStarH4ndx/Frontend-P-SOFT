@@ -5,17 +5,17 @@ import { LoginPage } from "./pages/login";
 import { RouterLayout } from "./common/RouterLayout";
 import { RecoveryPage } from "./pages/nnuevo/recuperarContra";
 import { ServicePage } from "./pages/servicios";
-import {UserProvider} from "./perfil/UserContext";
+import ConfirmServicePage from "./pages/servicios/confirmServices";
 import { RegisterPage } from "./pages/registro/registro";
-import { CreateServicePage } from './pages/nnuevo/servicio';
+import { CreateServicePage } from "./pages/nnuevo/servicio";
 
-export const AppRouter: React.FC<{}> = () => {
+export const AppRouter: React.FC<{}> = () =>{
     return (
         <Routes>
-            <Route path="/" element={<RouterLayout />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/servicios" element={<ServicePage />} />
-                <Route path="/perfil" element={<UserProvider children={undefined} />} />
+            <Route path="/" element={<RouterLayout/>}>
+                <Route path="/" element={<HomePage/>} />
+                <Route path="/servicios" element={<ServicePage/>} />
+                <Route path="/servicios/confirmacion" element={<ConfirmServicePage/>} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/recuperarContra" element={<RecoveryPage />} />
