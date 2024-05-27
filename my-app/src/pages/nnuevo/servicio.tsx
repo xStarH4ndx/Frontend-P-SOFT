@@ -1,32 +1,19 @@
 import React, { useState } from "react";
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
+import { useUserContext } from '../../perfil/UserContext';
 
-type ServiceType = {
+export type ServiceType = {
     ID_service: string;
     Nombre: string;
-    fotos: string[]; // Cambiado a una lista de URLs de imágenes
-    Costo: number; // Cambiado a un tipo numérico para el precio
+    fotos: string[];
+    Costo: number;
     direccion: string;
     tipoServicio: string;
+    usuario: string; // Añadido para identificar el usuario que creó el servicio
 };
 
-export const enviarReseñaAlServidor = async (id: string, puntuacion: string, comentario: string) => {
-        // Aquí es donde enviarías los datos al servidor. Este es solo un ejemplo y es probable que necesites ajustarlo para que funcione con tu servidor.
-        const respuesta = await fetch('/ruta/a/tu/api', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id, puntuacion, comentario }),
-        });
-
-        if (!respuesta.ok) {
-            throw new Error('Error al enviar la reseña');
-        }
-    };
-
 export const CreateServicePage: React.FC<{}> = () => {
-    const [serviceData, setServiceData] = useState<ServiceType>({
+    const [serviceData, setServiceData] = useState<Omit<ServiceType, 'usuario'>>({
         ID_service: "",
         Nombre: "",
         fotos: [],
@@ -35,6 +22,8 @@ export const CreateServicePage: React.FC<{}> = () => {
         tipoServicio: "",
     });
 
+    const { user, services, setServices } = useUserContext();
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setServiceData({ ...serviceData, [name]: value });
@@ -42,6 +31,9 @@ export const CreateServicePage: React.FC<{}> = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (user) {
+            setServices([...services, { ...serviceData, usuario: user.username }]);
+        }
         console.log(serviceData);
         // Aquí podrías enviar los datos a tu servidor o realizar otras acciones
     };
@@ -68,8 +60,6 @@ export const CreateServicePage: React.FC<{}> = () => {
         }
     };
 
-    
-
     return (
         <Container maxWidth="sm">
             <Grid
@@ -82,7 +72,7 @@ export const CreateServicePage: React.FC<{}> = () => {
                 <Grid item>
                     <Paper sx={{ padding: "1.2em", borderRadius: "0.5em" }}>
                         <Typography variant="h4">Crear Servicio</Typography>
-                        <Box component="form" onSubmit={handleSubmit as React.FormEventHandler<HTMLFormElement>} onPaste={handlePaste as unknown as React.ClipboardEventHandler<HTMLFormElement>}>
+                        <Box component="form" onSubmit={handleSubmit}> {/* Agrega el atributo onSubmit */}
                             <TextField
                                 name="Nombre"
                                 margin="normal"
@@ -124,6 +114,7 @@ export const CreateServicePage: React.FC<{}> = () => {
                                 margin="normal"
                                 fullWidth
                                 label="Precio del Servicio"
+                                type="number"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
                                 onChange={handleChange}
