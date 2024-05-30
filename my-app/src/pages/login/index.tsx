@@ -1,50 +1,53 @@
-import React from "react";
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
-import { useNotification } from "../../context/notification.context";
-import { LoginValidate } from "../../utils/validateForm";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../../graphql/mutations';
+import { useNotification } from "../../context/notification.context";
+import { useNavigate } from "react-router-dom";
 
 type LoginType = {
     username: string;
     password: string;
 };
 
-export const LoginPage: React.FC<{}> = () => {
+export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
-    const { getError, getSucces } = useNotification();
-    const [loginData, setLoginData] = React.useState<LoginType>({
+    const { getError, getSuccess } = useNotification();
+    const [loginData, setLoginData] = useState<LoginType>({
         username: "",
         password: "",
     });
 
     const [login, { loading, error, data }] = useMutation(LOGIN);
 
-    const dataLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoginData({ ...loginData, [e.target.name]: e.target.value });
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setLoginData({ ...loginData, [name]: value });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await LoginValidate.validate(loginData);
-            const response = await login({ variables: { ...loginData } });
-            const { token, user } = response.data.login;
-
-            // Almacenar el token en localStorage o en un contexto global
-            localStorage.setItem('token', token);
-
-            getSucces(`Bienvenido, ${user.firstname} ${user.lastname}`);
-            navigate("/"); // Redirige a la página de inicio u otra página
+            console.log("Datos enviados:", loginData); // Depuración: Ver los datos enviados
+            const response = await login({
+                variables: {
+                    username: loginData.username,
+                    password: loginData.password,
+                },
+            });
+            console.log("Respuesta de la mutación:", response); // Depuración: Ver la respuesta
+            getSuccess("Inicio de sesión exitoso");
+            navigate("/dashboard"); // Redirige a la página principal
         } catch (error: any) {
-            getError(`Credenciales Incorrectas`);
+            console.error("Error en la mutación:", error); // Depuración: Ver el error
+            getError("Usuario o contraseña incorrectos");
         }
     };
 
     return (
         <Container maxWidth="sm">
-            <Grid container
+            <Grid
+                container
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
@@ -52,28 +55,31 @@ export const LoginPage: React.FC<{}> = () => {
             >
                 <Grid item>
                     <Paper sx={{ padding: "1.2em", borderRadius: "0.5em" }}>
-                        <Typography variant="h4">Iniciar Sesión</Typography>
+                        <Typography variant="h4">Iniciar sesión</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <TextField
                                 name="username"
                                 margin="normal"
                                 type="email"
                                 fullWidth
-                                label="email"
-                                sx={{ mt: 2, mb: 1.5 }}
-                                onChange={dataLogin}
+                                label="Correo electrónico"
+                                sx={{ mt: 1.5, mb: 1.5 }}
+                                required
+                                onChange={handleChange}
                             />
                             <TextField
                                 name="password"
                                 margin="normal"
                                 type="password"
                                 fullWidth
-                                label="password"
+                                label="Contraseña"
                                 sx={{ mt: 1.5, mb: 1.5 }}
-                                onChange={dataLogin}
+                                required
+                                onChange={handleChange}
                             />
-                            <Button color="primary" fullWidth variant="text" sx={{ mt: 1, mb: 1, fontSize: "0.8rem", textAlign: "left" }} onClick={() => navigate("recuperarContra")}>¿Olvidaste tu contraseña?</Button>
-                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>Iniciar Sesión</Button>
+                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>
+                                Iniciar sesión
+                            </Button>
                         </Box>
                     </Paper>
                 </Grid>

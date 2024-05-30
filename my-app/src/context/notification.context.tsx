@@ -1,41 +1,40 @@
 import { AlertColor } from '@mui/material';
-import React from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Notification } from '../components';
 
 type ContextProps = {
-    getError: (msg:string) => void;
-    getSucces: (msg:string) => void; 
+    getError: (msg: string) => void;
+    getSuccess: (msg: string) => void; 
 };
 
-const NotificationContext = React.createContext<ContextProps | null>(null);
+const NotificationContext = createContext<ContextProps | null>(null);
 
-export const NotificationProvider: React.FC<{children: JSX.Element}> = ({children,}) =>{
-    const [msg, setMsg] = React.useState("")
-    const [open, setOpen] = React.useState(false)
-    const [severity, setSeverity] = React.useState<AlertColor | undefined>(
-        undefined
-    );
+export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const [msg, setMsg] = useState<string>("");
+    const [open, setOpen] = useState<boolean>(false);
+    const [severity, setSeverity] = useState<AlertColor | undefined>(undefined);
 
-    const handleClose = () =>{
-        setOpen(false)
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const getError = (msg: string) => {
-        setSeverity("error")
-        setOpen(true)
-        setMsg(msg)
+        setSeverity("error");
+        setOpen(true);
+        setMsg(msg);
     };
 
-    const getSucces = (msg:string) =>{
+    const getSuccess = (msg: string) => {
         setSeverity("success");
         setOpen(true);
         setMsg(msg);
     };
 
-    const value= {
+    const value = {
         getError,
-        getSucces,
+        getSuccess,
     };
+
     return (
         <NotificationContext.Provider value={value}>
             <Notification
@@ -49,8 +48,8 @@ export const NotificationProvider: React.FC<{children: JSX.Element}> = ({childre
     );
 };
 
-export const useNotification = () =>{
-    const context = React.useContext(NotificationContext)
-    if(!context) throw new Error("No existe contexto")
+export const useNotification = () => {
+    const context = useContext(NotificationContext);
+    if (!context) throw new Error("useNotification debe ser usado dentro de un NotificationProvider");
     return context;
 };

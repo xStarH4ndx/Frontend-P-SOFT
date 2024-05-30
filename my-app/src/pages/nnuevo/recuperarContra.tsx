@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
+import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
 import { FORGOT_PASSWORD } from '../../graphql/mutations';
 import { useNotification } from "../../context/notification.context";
@@ -8,8 +8,8 @@ type RecoveryType = {
     email: string;
 };
 
-export const RecoveryPage: React.FC<{}> = () => {
-    const { getError, getSucces } = useNotification();
+export const RecoveryPage: React.FC = () => {
+    const { getError, getSuccess } = useNotification();
     const [recoveryData, setRecoveryData] = useState<RecoveryType>({
         email: "",
     });
@@ -24,12 +24,17 @@ export const RecoveryPage: React.FC<{}> = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            console.log("Datos enviados:", recoveryData); // Depuración: Ver los datos enviados
             const response = await forgotPassword({
-                variables: { email: recoveryData.email }
+                variables: {
+                    email: recoveryData.email,
+                },
             });
-            getSucces("Correo de recuperación enviado");
+            console.log("Respuesta de la mutación:", response); // Depuración: Ver la respuesta
+            getSuccess("Correo enviado con éxito");
         } catch (error: any) {
-            getError(`Correo inválido`);
+            console.error("Error en la mutación:", error); // Depuración: Ver el error
+            getError("Error al enviar el correo");
         }
     };
 
@@ -52,12 +57,12 @@ export const RecoveryPage: React.FC<{}> = () => {
                                 type="email"
                                 fullWidth
                                 label="Correo electrónico"
-                                sx={{ mt: 2, mb: 1.5 }}
+                                sx={{ mt: 1.5, mb: 1.5 }}
                                 required
                                 onChange={handleChange}
                             />
-                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }} disabled={loading}>
-                                {loading ? "Enviando..." : "Enviar Correo de Recuperación"}
+                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>
+                                Enviar
                             </Button>
                         </Box>
                     </Paper>
