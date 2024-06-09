@@ -1,3 +1,0 @@
-cosas por instalar:
-
-npm install yup
