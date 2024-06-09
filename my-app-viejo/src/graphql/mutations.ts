@@ -19,26 +19,23 @@ export const LOGIN = gql`
   }
 `;
 
-
-//FUNCIONANDO
 // Añadir nuevo usuario
-export const CREAR_USUARIO = gql`
-mutation crearUsuario($usuarioDTO: UsuarioDTO!) {
-  crearUsuario(usuarioDTO: $usuarioDTO) {
-    id
-    firstname
-    lastname
-    username
-    telephone
-    accountLocked
-    enabled
-    roles {
+export const ADD_NEW_USER = gql`
+  mutation addNewUser($usuario: UsuarioInput!) {
+    addNewUser(usuario: $usuario) {
       id
-      name
+      firstname
+      lastname
+      username
+      telephone
+      accountLocked
+      enabled
+      roles {
+        id
+        name
+      }
     }
   }
-}
-
 `;
 
 // Olvidar contraseña

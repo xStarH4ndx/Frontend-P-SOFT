@@ -1,21 +1,24 @@
+import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
 import React, { useState } from "react";
+import { useMutation } from '@apollo/client';
+import { LOGIN } from '../../graphql/mutations';
 import { useNotification } from "../../context/notification.context";
 import { useNavigate } from "react-router-dom";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+
+type LoginType = {
+    username: string;
+    password: string;
+};
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const { getError, getSuccess } = useNotification();
-    const [loginData, setLoginData] = useState({
+    const [loginData, setLoginData] = useState<LoginType>({
         username: "",
         password: "",
     });
+
+    const [login, { loading, error, data }] = useMutation(LOGIN);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -25,22 +28,19 @@ export const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8090/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+            console.log("Datos enviados:", loginData); // Depuración: Ver los datos enviados
+            const response = await login({
+                variables: {
+                    username: loginData.username,
+                    password: loginData.password,
                 },
-                body: JSON.stringify(loginData)
             });
-            if (response.ok) {
-                getSuccess("Inicio de sesión exitoso");
-                navigate("/dashboard");
-            } else {
-                getError("Usuario o contraseña incorrectos");
-            }
-        } catch (error) {
-            console.error("Error en la solicitud:", error);
-            getError("Ocurrió un error al intentar iniciar sesión");
+            console.log("Respuesta de la mutación:", response); // Depuración: Ver la respuesta
+            getSuccess("Inicio de sesión exitoso");
+            navigate("/dashboard"); // Redirige a la página principal
+        } catch (error: any) {
+            console.error("Error en la mutación:", error); // Depuración: Ver el error
+            getError("Usuario o contraseña incorrectos");
         }
     };
 

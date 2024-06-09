@@ -1,18 +1,9 @@
+import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
 import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
-import { CREAR_USUARIO } from '../../graphql/mutations';
+import { ADD_NEW_USER } from '../../graphql/mutations';
 import { useNotification } from "../../context/notification.context";
 import { useNavigate } from "react-router-dom";
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import axios from 'axios';
 
 type RegisterType = {
     firstname: string;
@@ -21,7 +12,6 @@ type RegisterType = {
     password: string;
     confirmPassword: string;
     phone: string;
-    roles: number[];
 };
 
 export const RegisterPage: React.FC = () => {
@@ -34,21 +24,13 @@ export const RegisterPage: React.FC = () => {
         password: "",
         confirmPassword: "",
         phone: "",
-        roles: []
     });
 
-    const [addNewUser, { loading, error, data }] = useMutation(CREAR_USUARIO);
+    const [addNewUser, { loading, error, data }] = useMutation(ADD_NEW_USER);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setRegisterData({ ...registerData, [name]: value });
-    };
-
-    const handleRoleChange = (role: number) => {
-        const updatedRoles = registerData.roles.includes(role)
-            ? registerData.roles.filter(r => r !== role)
-            : [...registerData.roles, role];
-        setRegisterData({ ...registerData, roles: updatedRoles });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,9 +40,10 @@ export const RegisterPage: React.FC = () => {
             return;
         }
         try {
-            const { data } = await addNewUser({
+            console.log("Datos enviados:", registerData); // Depuración: Ver los datos enviados
+            const response = await addNewUser({
                 variables: {
-                    usuarioDTO: {
+                    usuario: {
                         firstname: registerData.firstname,
                         lastname: registerData.lastname,
                         username: registerData.username,
@@ -68,22 +51,18 @@ export const RegisterPage: React.FC = () => {
                         telephone: registerData.phone,
                         enabled: true,
                         accountLocked: false,
-                        roles: registerData.roles
+                        roles: []  // Ajusta esto según tus necesidades
                     }
                 }
             });
-    
-            if (data && data.crearUsuario) {
-                getSuccess("Registro exitoso");
-                navigate("/login");
-            } else {
-                getError("No se pudo completar su solicitud");
-            }
-        } catch (error) {
-            getError("No se pudo completar su solicitud");
+            console.log("Respuesta de la mutación:", response); // Depuración: Ver la respuesta
+            getSuccess("Registro exitoso");
+            navigate("/login"); // Redirige a la página de inicio de sesión
+        } catch (error: any) {
+            console.error("Error en la mutación:", error); // Depuración: Ver el error
+            getError("El correo ya está registrado");
         }
     };
-    
 
     return (
         <Container maxWidth="sm">
@@ -105,7 +84,6 @@ export const RegisterPage: React.FC = () => {
                                 label="Nombre"
                                 sx={{ mt: 2, mb: 1.5 }}
                                 required
-                                value={registerData.firstname}
                                 onChange={handleChange}
                             />
                             <TextField
@@ -115,7 +93,6 @@ export const RegisterPage: React.FC = () => {
                                 label="Apellido"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
-                                value={registerData.lastname}
                                 onChange={handleChange}
                             />
                             <TextField
@@ -126,7 +103,6 @@ export const RegisterPage: React.FC = () => {
                                 label="Correo electrónico"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
-                                value={registerData.username}
                                 onChange={handleChange}
                             />
                             <TextField
@@ -137,7 +113,6 @@ export const RegisterPage: React.FC = () => {
                                 label="Contraseña"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
-                                value={registerData.password}
                                 onChange={handleChange}
                             />
                             <TextField
@@ -148,7 +123,6 @@ export const RegisterPage: React.FC = () => {
                                 label="Confirmar contraseña"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
-                                value={registerData.confirmPassword}
                                 onChange={handleChange}
                             />
                             <TextField
@@ -158,22 +132,9 @@ export const RegisterPage: React.FC = () => {
                                 label="Teléfono"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
-                                value={registerData.phone}
                                 onChange={handleChange}
-                            />
-                            <FormControlLabel
-                                control={<Checkbox
-                                    checked={registerData.roles.includes(1)}
-                                    onChange={() => handleRoleChange(1)}
-                                />}
-                                label="Hacerme usuario"
-                            />
-                            <FormControlLabel
-                                control={<Checkbox
-                                    checked={registerData.roles.includes(2)}
-                                    onChange={() => handleRoleChange(2)}
-                                />}
-                                label="Hacerme prestador"
+                                InputLabelProps={{ shrink: true }}  // Añade esto para que la etiqueta no se solape con el campo vacío
+                                defaultValue=""  // Establece el valor por defecto como vacío
                             />
                             <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>
                                 Registrarse
@@ -185,4 +146,3 @@ export const RegisterPage: React.FC = () => {
         </Container>
     );
 };
-
