@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Container, Divider, Grid, Paper, Typography } from '@mui/material';
-import { HeaderComponent } from "../../components";
+import { HeaderComponent } from "../../../components";
 import { useNavigate } from "react-router";
 
 export const HomePage: React.FC<{}> = () =>{

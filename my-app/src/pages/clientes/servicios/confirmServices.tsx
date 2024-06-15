@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Grid, Typography, Button, Paper, Divider, Avatar, TextField, Rating, CircularProgress, Box } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import { EVALUAR_SERVICIO, COMENTAR_SERVICIO } from "../../api/graphql/mutations";
+import { EVALUAR_SERVICIO, COMENTAR_SERVICIO } from "../../../api/graphql/mutations";
 
 const ConfirmServicePage: React.FC<{}> = () => {
     const navigate = useNavigate();

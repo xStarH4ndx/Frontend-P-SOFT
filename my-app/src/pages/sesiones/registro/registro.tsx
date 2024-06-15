@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
-import { CREAR_USUARIO } from '../../api/graphql/mutations';
-import { useNotification } from "../../tools/context/notification.context";
+import { CREAR_USUARIO } from '../../../api/graphql/mutations';
+import { useNotification } from "../../../tools/context/notification.context";
 import { useNavigate } from "react-router-dom";
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';

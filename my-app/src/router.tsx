@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { HomePage } from "./pages/home";
-import { LoginPage } from "./pages/login";
+import { HomePage } from "./pages/sesiones/home";
+import { LoginPage } from "./pages/sesiones/login";
 import { RouterLayout } from "./common/RouterLayout";
-import { RecoveryPage } from "./pages/nnuevo/recuperarContra";
-import ServicePage from "./pages/servicios";
-import ConfirmServicePage from "./pages/servicios/confirmServices";
-import { RegisterPage } from "./pages/registro/registro";
-import { CreateServicePage } from "./pages/nnuevo/servicio";
+import { RecoveryPage } from "./pages/sesiones/login/recuperarContra";
+import ServicePage from "./pages/clientes/servicios";
+import ConfirmServicePage from "./pages/clientes/servicios/confirmServices";
+import { RegisterPage } from "./pages/sesiones/registro/registro";
+import { CreateServicePage } from "./pages/proveedor/nnuevo/servicio";
 import { UserServicePage }from './tools/perfil/UserServicesPage';
 
 export const AppRouter: React.FC<{}> = () =>{
