@@ -4,7 +4,7 @@ import { HomePage } from "./pages/home";
 import { LoginPage } from "./pages/login";
 import { RouterLayout } from "./common/RouterLayout";
 import { RecoveryPage } from "./pages/nnuevo/recuperarContra";
-import { ServicePage } from "./pages/servicios";
+import ServicePage from "./pages/servicios";
 import ConfirmServicePage from "./pages/servicios/confirmServices";
 import { RegisterPage } from "./pages/registro/registro";
 import { CreateServicePage } from "./pages/nnuevo/servicio";

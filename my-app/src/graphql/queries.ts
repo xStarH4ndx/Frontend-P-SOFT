@@ -48,17 +48,16 @@ export const LISTAR_SERVICIO_POR_ID = gql`
   }
 `;
 
-// Obtener usuario por ID (renombrado)
-export const USUARIO = gql`
-  query usuario($id: Int!) {
-    usuario(id: $id) {
-      id
-      firstname
-      lastname
-      username
-      telephone
+// Obtener usuario por ID
+export const OBTENER_USUARIO = gql`
+  query obtenerUsuario($id: Int!) {
+    obtenerUsuario(id: $id) {
       accountLocked
       enabled
+      firstname
+      id
+      lastname
+      password
       roles {
         id
         name
@@ -81,12 +80,18 @@ export const OBTENER_SERVICIO = gql`
 
 // Listar todos los servicios
 export const LISTAR_SERVICIOS = gql`
-  query listarServicios {
+  query {
     listarServicios {
       id
       nombre
+      autor {
+        firstname
+        lastname
+      }
       costo
       direccion
+      evaluaciones
+      comentarios
     }
   }
 `;

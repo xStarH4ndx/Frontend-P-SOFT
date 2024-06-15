@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
             });
             if (response.ok) {
                 getSuccess("Inicio de sesión exitoso");
-                navigate("/dashboard");
+                navigate("/");
             } else {
                 getError("Usuario o contraseña incorrectos");
             }
