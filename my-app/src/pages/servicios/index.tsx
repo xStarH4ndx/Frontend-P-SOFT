@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-    Container,
-    Paper,
-    Grid,
-    Typography,
-    Divider,
-    TextField,
-    Button,
-    Menu,
-    MenuItem,
-    Avatar,
-    CircularProgress,
-    Snackbar,
-} from "@mui/material";
+import {Container,Paper,Grid,Typography,Divider,TextField,Button,Menu,MenuItem,Avatar,CircularProgress,Snackbar} from "@mui/material";
 import { useNavigate } from "react-router";
 import { useQuery } from "@apollo/client";
 import { LISTAR_SERVICIOS } from "../../graphql/queries";
@@ -40,16 +27,21 @@ const ServicePage: React.FC<{}> = () => {
     const { loading, error, data } = useQuery(LISTAR_SERVICIOS);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [elementos, setElementos] = useState<Servicio[]>([]);
     const [filteredElementos, setFilteredElementos] = useState<Servicio[]>([]);
     const [loadingRequest, setLoadingRequest] = useState<boolean>(false);
     const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
     // Manejar errores y carga de la consulta
+    useEffect(() => {
+        if (data) {
+            setElementos(data.listarServicios);
+            setFilteredElementos(data.listarServicios);
+        }
+    }, [data]);
+
     if (loading) return <CircularProgress />;
     if (error) return <p>Error: {error.message}</p>;
-
-    // Obtener servicios después de que la consulta sea exitosa
-    const elementos: Servicio[] = data.listarServicios;
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -60,7 +52,7 @@ const ServicePage: React.FC<{}> = () => {
     };
 
     const handleMenuItemClick = (option: string) => {
-        let sortedElementos: Servicio[] = [...elementos];
+        let sortedElementos: Servicio[] = [...filteredElementos];
         if (option === "Mayor Precio") {
             sortedElementos.sort((a, b) => b.costo - a.costo);
         } else if (option === "Menor Precio") {
@@ -101,10 +93,6 @@ const ServicePage: React.FC<{}> = () => {
             setSnackbarOpen(true);
         }, 1500); // Simular una carga de 1.5 segundos antes de navegar
     };
-
-    // Determinar qué lista mostrar dependiendo de si hay un término de búsqueda
-    // o si se aplicó algún filtro.
-    const serviciosToShow = searchTerm ? filteredElementos : elementos;
 
     return (
         <Container>
@@ -180,8 +168,8 @@ const ServicePage: React.FC<{}> = () => {
                 justifyContent="center"
                 sx={{ mt: 2 }}
             >
-                {serviciosToShow.length > 0 ? (
-                    serviciosToShow.map((elemento, index) => (
+                {filteredElementos.length > 0 ? (
+                    filteredElementos.map((elemento, index) => (
                         <Grid item key={index} sx={{ width: "100%" }}>
                             <Paper
                                 sx={{
