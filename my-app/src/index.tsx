@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ThemeConfig } from './config/theme.config';
+import { ThemeConfig } from './tools/config/theme.config';
 import { ApolloProvider } from '@apollo/client';
-import client from './apollo/client';
+import client from './api/apollo/client';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

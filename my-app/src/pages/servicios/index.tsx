@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Container,Paper,Grid,Typography,Divider,TextField,Button,Menu,MenuItem,Avatar,CircularProgress,Snackbar} from "@mui/material";
 import { useNavigate } from "react-router";
 import { useQuery } from "@apollo/client";
-import { LISTAR_SERVICIOS } from "../../graphql/queries";
+import { LISTAR_SERVICIOS } from "../../api/graphql/queries";
 
 // Definición de la interfaz para el autor
 interface Autor {

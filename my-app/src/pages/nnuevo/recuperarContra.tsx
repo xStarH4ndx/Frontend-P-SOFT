@@ -1,8 +1,8 @@
 import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
 import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
-import { FORGOT_PASSWORD } from '../../graphql/mutations';
-import { useNotification } from "../../context/notification.context";
+import { FORGOT_PASSWORD } from '../../api/graphql/mutations';
+import { useNotification } from "../../tools/context/notification.context";
 
 type RecoveryType = {
     email: string;

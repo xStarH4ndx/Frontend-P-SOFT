@@ -1,6 +1,6 @@
 import { AlertColor } from '@mui/material';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Notification } from '../components';
+import { Notification } from '../../components';
 
 type ContextProps = {
     getError: (msg: string) => void;

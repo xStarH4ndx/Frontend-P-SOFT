@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from '@apollo/client';
-import { CREAR_USUARIO } from '../../graphql/mutations';
-import { useNotification } from "../../context/notification.context";
+import { CREAR_USUARIO } from '../../api/graphql/mutations';
+import { useNotification } from "../../tools/context/notification.context";
 import { useNavigate } from "react-router-dom";
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import axios from 'axios';
 
 type RegisterType = {
     firstname: string;
