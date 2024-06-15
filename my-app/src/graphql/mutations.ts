@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
 
-// Mutación para evaluar un servicio
 export const EVALUAR_SERVICIO = gql`
   mutation EvaluarServicio($puntuacion: Int!, $servicioId: Int!, $usuarioId: Int!) {
     evaluarServicio(puntuacion: $puntuacion, servicioId: $servicioId, usuarioId: $usuarioId) {
@@ -10,7 +9,6 @@ export const EVALUAR_SERVICIO = gql`
   }
 `;
 
-// Mutación para comentar un servicio
 export const COMENTAR_SERVICIO = gql`
   mutation ComentarServicio($comentario: String!, $servicioId: Int!, $usuarioId: Int!) {
     comentarServicio(comentario: $comentario, servicioId: $servicioId, usuarioId: $usuarioId) {
@@ -22,6 +20,7 @@ export const COMENTAR_SERVICIO = gql`
     }
   }
 `;
+
 
 // Define and export the LOGIN mutation
 export const LOGIN = gql`

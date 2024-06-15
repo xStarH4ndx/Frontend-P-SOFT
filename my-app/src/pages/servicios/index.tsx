@@ -99,7 +99,7 @@ const ServicePage: React.FC<{}> = () => {
                 },
             });
             setSnackbarOpen(true);
-        }, 2000); // Simular una carga de 2 segundos antes de navegar
+        }, 1500); // Simular una carga de 1.5 segundos antes de navegar
     };
 
     // Determinar qué lista mostrar dependiendo de si hay un término de búsqueda
@@ -264,7 +264,7 @@ const ServicePage: React.FC<{}> = () => {
                         width: "100%",
                         height: "100%",
                         background: "rgba(0, 0, 0, 0.7)",
-                        zIndex: 9999,
+                        zIndex: 1,
                     }}
                 >
                     <CircularProgress color="primary" />
