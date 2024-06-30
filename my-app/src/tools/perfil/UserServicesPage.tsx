@@ -1,30 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Paper, Grid, Typography, Divider, Button, Avatar } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { useUserContext } from './UserContext';
 
 export const UserServicePage: React.FC = () => {
     const navigate = useNavigate();
-    const { user, services, setServices } = useUserContext();
+    
+    // Estado de los servicios
+    const [services, setServices] = useState([
+        {
+            ID_service: '1',
+            Nombre: 'Servicio de Limpieza',
+            direccion: 'Calle Falsa 123',
+            tipoServicio: 'Limpieza',
+            Costo: '$50',
+            fotos: ['https://via.placeholder.com/150']
+        },
+        {
+            ID_service: '2',
+            Nombre: 'Servicio de Jardinería',
+            direccion: 'Calle Verdadera 456',
+            tipoServicio: 'Jardinería',
+            Costo: '$70',
+            fotos: ['https://via.placeholder.com/150']
+        }
+    ]);
 
     const handleCreateService = () => {
         navigate('/crear-servicio');
     };
 
     const handleEditService = (serviceId: string) => {
-        // Redirigir a la página de edición del servicio con el ID del servicio
         navigate(`/editar-servicio/${serviceId}`);
     };
 
     const handleDeleteService = (serviceId: string) => {
-        // Eliminar el servicio con el ID proporcionado
         const updatedServices = services.filter(service => service.ID_service !== serviceId);
         setServices(updatedServices);
-        // Aquí podrías realizar una solicitud al servidor para eliminar el servicio permanentemente
     };
-
-    // Filtrar servicios por el usuario actualmente autenticado
-    const userServices = services.filter(service => service.usuario === user?.username);
 
     return (
         <Container>
@@ -35,8 +47,8 @@ export const UserServicePage: React.FC = () => {
                 </Button>
                 <Divider sx={{ width: '100%', mb: 2 }} />
                 <Grid container direction="column" alignItems="center" justifyContent="center" sx={{ mt: 2 }}>
-                    {userServices.length > 0 ? (
-                        userServices.map((service, index) => (
+                    {services.length > 0 ? (
+                        services.map((service, index) => (
                             <Grid item key={index} sx={{ width: '100%' }}>
                                 <Paper sx={{ borderRadius: "1.5em", height: "auto", mt: 3, display: 'flex', alignItems: 'center', p: 2 }}>
                                     <Grid container spacing={2}>
@@ -49,8 +61,10 @@ export const UserServicePage: React.FC = () => {
                                             <Typography variant="body1">{`Dirección: ${service.direccion}`}</Typography>
                                             <Typography variant="body1">{`Tipo: ${service.tipoServicio}`}</Typography>
                                             <Typography variant="body1">{`Costo: ${service.Costo}`}</Typography>
-                                            <Button onClick={() => handleEditService(service.ID_service)}>Editar</Button>
-                                            <Button onClick={() => handleDeleteService(service.ID_service)}>Eliminar</Button>
+                                        </Grid>
+                                        <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end' }}>
+                                            <Button onClick={() => handleEditService(service.ID_service)} sx={{ mb: 1 }} variant="outlined" color="primary">Editar</Button>
+                                            <Button onClick={() => handleDeleteService(service.ID_service)} variant="outlined" color="secondary">Eliminar</Button>
                                         </Grid>
                                     </Grid>
                                 </Paper>
@@ -58,7 +72,7 @@ export const UserServicePage: React.FC = () => {
                         ))
                     ) : (
                         <Typography variant="body1" sx={{ mt: 4 }}>
-                            No has creado ningún servicio todavía.
+                            No hay servicios creados.
                         </Typography>
                     )}
                 </Grid>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type UserType = {
     username: string;
@@ -13,7 +13,7 @@ type ServiceType = {
     Costo: number;
     direccion: string;
     tipoServicio: string;
-    usuario: string; // Añadido para identificar el usuario que creó el servicio
+    usuario: string;
 };
 
 type UserContextType = {
@@ -25,9 +25,28 @@ type UserContextType = {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<UserType | null>(null);
-    const [services, setServices] = useState<ServiceType[]>([]);
+    const [services, setServices] = useState<ServiceType[]>([
+        {
+            ID_service: '1',
+            Nombre: 'Servicio de Limpieza',
+            direccion: 'Calle Falsa 123',
+            tipoServicio: 'Limpieza',
+            Costo: 50,
+            fotos: ['https://via.placeholder.com/150'],
+            usuario: 'user1'
+        },
+        {
+            ID_service: '2',
+            Nombre: 'Servicio de Jardinería',
+            direccion: 'Calle Verdadera 456',
+            tipoServicio: 'Jardinería',
+            Costo: 70,
+            fotos: ['https://via.placeholder.com/150'],
+            usuario: 'user2'
+        }
+    ]);
 
     return (
         <UserContext.Provider value={{ user, setUser, services, setServices }}>
