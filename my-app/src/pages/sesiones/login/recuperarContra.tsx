@@ -1,8 +1,9 @@
-import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
 import React, { useState } from "react";
+import { useNotification } from "../../../tools/context/notification.context";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from '@apollo/client';
 import { FORGOT_PASSWORD } from '../../../api/graphql/mutations';
-import { useNotification } from "../../../tools/context/notification.context";
+import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui/material';
 
 type RecoveryType = {
     email: string;
@@ -10,11 +11,12 @@ type RecoveryType = {
 
 export const RecoveryPage: React.FC = () => {
     const { getError, getSuccess } = useNotification();
+    const navigate = useNavigate(); // Importa useNavigate y obtén la función navigate
     const [recoveryData, setRecoveryData] = useState<RecoveryType>({
         email: "",
     });
 
-    const [forgotPassword, { loading, error, data }] = useMutation(FORGOT_PASSWORD);
+    const [forgotPassword, { loading }] = useMutation(FORGOT_PASSWORD);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -24,16 +26,17 @@ export const RecoveryPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            console.log("Datos enviados:", recoveryData); // Depuración: Ver los datos enviados
-            const response = await forgotPassword({
+            console.log("Datos enviados:", recoveryData);
+            const { data } = await forgotPassword({
                 variables: {
                     email: recoveryData.email,
                 },
             });
-            console.log("Respuesta de la mutación:", response); // Depuración: Ver la respuesta
+            console.log("Respuesta de la mutación:", data);
+            navigate("/resetearPass"); // Redirige a la pantalla de resetPass después de enviar el correo
             getSuccess("Correo enviado con éxito");
         } catch (error: any) {
-            console.error("Error en la mutación:", error); // Depuración: Ver el error
+            console.error("Error en la mutación:", error);
             getError("Error al enviar el correo");
         }
     };
@@ -59,10 +62,11 @@ export const RecoveryPage: React.FC = () => {
                                 label="Correo electrónico"
                                 sx={{ mt: 1.5, mb: 1.5 }}
                                 required
+                                value={recoveryData.email}
                                 onChange={handleChange}
                             />
                             <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>
-                                Enviar
+                                {loading ? 'Enviando...' : 'Enviar'}
                             </Button>
                         </Box>
                     </Paper>

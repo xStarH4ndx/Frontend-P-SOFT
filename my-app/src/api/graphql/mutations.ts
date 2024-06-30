@@ -70,12 +70,12 @@ export const FORGOT_PASSWORD = gql`
   }
 `;
 
-// Actualizar contraseña por código
 export const UPDATE_PASSWORD_BY_CODE = gql`
   mutation updatePasswordByCode($code: String!, $password: String!) {
     updatePasswordByCode(code: $code, password: $password)
   }
 `;
+
 
 // Crear servicio
 export const CREAR_SERVICIO = gql`
@@ -111,4 +111,8 @@ export const ELIMINAR_SERVICIO = gql`
       direccion
     }
   }
+    
 `;
+
+
+
