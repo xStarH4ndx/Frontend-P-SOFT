@@ -76,7 +76,7 @@ export const RegisterPage: React.FC = () => {
                 getSuccess("Registro exitoso");
                 navigate("/login");
             } else {
-                getError("No se pudo completar su solicitud");
+                getError("El correo ya esta en uso, intente nuevamente");
             }
         } catch (error) {
             getError("No se pudo completar su solicitud");
