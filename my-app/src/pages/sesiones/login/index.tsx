@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNotification } from "../../../tools/context/notification.context";
 import { useNavigate, Link } from "react-router-dom";
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -40,6 +40,7 @@ export const LoginPage: React.FC = () => {
 
             if (data && data.acceder) {
                 console.log("Respuesta exitosa del servidor:", data);
+                localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('access_token', data.acceder.access_token);
                 localStorage.setItem('refresh_token', data.acceder.refresh_token);
 

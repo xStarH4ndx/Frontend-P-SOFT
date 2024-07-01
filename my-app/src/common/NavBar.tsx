@@ -5,16 +5,20 @@ import { useNavigate } from "react-router";
 
 export const NavBar: React.FC<{}> = () => {
     const navigate = useNavigate();
-    const [isRegistered, setIsRegistered] = useState<boolean>(false);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
     useEffect(() => {  
-        const userRegistered = localStorage.getItem('userRegistered');
-        setIsRegistered(userRegistered === 'true');
+        const checkLoggedInStatus = () => {
+            const userLoggedIn = localStorage.getItem('isLoggedIn');
+            setIsLoggedIn(userLoggedIn === 'true');
+        };
+
+        checkLoggedInStatus();
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('userRegistered');
-        setIsRegistered(false);
+        localStorage.removeItem('isLoggedIn');
+        setIsLoggedIn(false);
         navigate("/");
     };
 
@@ -38,7 +42,7 @@ export const NavBar: React.FC<{}> = () => {
                             </Grid>
                             <Grid item container alignItems="center" xs={2}>
                                 <Stack direction="row" spacing={2}>
-                                    {isRegistered ? (
+                                    {isLoggedIn ? (
                                         <>
                                             <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
                                             <Button variant="outlined" onClick={handleLogout}>Logout</Button>

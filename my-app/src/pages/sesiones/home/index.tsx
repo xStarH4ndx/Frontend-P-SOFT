@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { Button, Container, Divider, Grid, Paper, Typography, CircularProgress, Avatar } from '@mui/material';
 import { HeaderComponent } from "../../../components";
@@ -24,8 +24,19 @@ interface Servicio {
 export const HomePage: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false); // Estado para controlar la pantalla de carga
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Estado para verificar si el usuario está autenticado
 
   const { data, loading: queryLoading, error } = useQuery(LISTAR_SERVICIOS);
+
+  // Verificar si el usuario está autenticado al cargar el componente
+  useEffect(() => {
+    const checkLoggedInStatus = () => {
+      const userLoggedIn = localStorage.getItem('isLoggedIn');
+      setIsLoggedIn(userLoggedIn === 'true');
+    };
+
+    checkLoggedInStatus();
+  }, []);
 
   if (queryLoading) return <CircularProgress />;
   if (error) return <p>Error: {error.message}</p>;
@@ -56,6 +67,11 @@ export const HomePage: React.FC<{}> = () => {
   };
 
   const handleRequestService = (elemento: Servicio) => {
+    if (!isLoggedIn) {
+      navigate("/login"); // Redirige a la página de login si el usuario no está autenticado
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
