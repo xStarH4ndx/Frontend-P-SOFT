@@ -11,6 +11,8 @@ import { CreateServicePage } from "./pages/proveedor/nnuevo/servicio";
 import UserServicePage from './tools/perfil/UserServicesPage';
 import EditServicePage from './tools/perfil/EditServicePage';
 import ServiceDetailWrapper from "./pages/proveedor/nnuevo/ServiceDetailWrapper";
+import { ResetPasswordPage } from "./pages/sesiones/login/resetearPass";
+
 
 
 export const AppRouter: React.FC<{}> = () =>{
@@ -23,6 +25,7 @@ export const AppRouter: React.FC<{}> = () =>{
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/recuperarContra" element={<RecoveryPage />} />
+            <Route path="/resetearPass" element={<ResetPasswordPage />} />
             <Route path="/registro" element={<RegisterPage/>} />
             <Route path="/mis-servicios" element={<UserServicePage />} />
             <Route path="/crear-servicio" element={<CreateServicePage />} />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNotification } from "../../../tools/context/notification.context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useQuery, gql } from '@apollo/client';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -9,12 +10,27 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+const ACCEDER_QUERY = gql`
+  query Acceder($username: String!, $password: String!) {
+    acceder(username: $username, password: $password) {
+      access_token
+      refresh_token
+    
+    }
+  }
+`;
+console.log()
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const { getError, getSuccess } = useNotification();
     const [loginData, setLoginData] = useState({
         username: "",
         password: "",
+        
+    });
+  
+    const { loading, error, data, refetch } = useQuery(ACCEDER_QUERY, {
+        skip: true,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,21 +40,28 @@ export const LoginPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Datos de inicio de sesión:", loginData);
+
         try {
-            const response = await fetch('http://localhost:8090/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(loginData)
+            const { data } = await refetch({
+                username: loginData.username,
+                password: loginData.password,
             });
-            if (response.ok) {
+
+            if (data && data.acceder) {
+                console.log("Respuesta exitosa del servidor:", data);
+                localStorage.setItem('access_token', data.acceder.access_token);
+                localStorage.setItem('refresh_token', data.acceder.refresh_token);
+
                 getSuccess("Inicio de sesión exitoso");
                 navigate("/");
+                
+                
             } else {
                 getError("Usuario o contraseña incorrectos");
             }
         } catch (error) {
+            
             console.error("Error en la solicitud:", error);
             getError("Ocurrió un error al intentar iniciar sesión");
         }
@@ -77,8 +100,17 @@ export const LoginPage: React.FC = () => {
                                 required
                                 onChange={handleChange}
                             />
-                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 3 }}>
-                                Iniciar sesión
+                            <Button fullWidth type="submit" variant="contained" sx={{ mt: 1.5, mb: 1.5 }}>
+                                {loading ? 'Cargando...' : 'Iniciar sesión'}
+                            </Button>
+                            <Button
+                                component={Link}
+                                to="/login/recuperarContra"
+                                fullWidth
+                                variant="text"
+                                sx={{ mt: 1, mb: 3, color: 'text.secondary' }}
+                            >
+                                ¿Olvidaste tu contraseña?
                             </Button>
                         </Box>
                     </Paper>
