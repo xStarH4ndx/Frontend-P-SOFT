@@ -29,6 +29,8 @@ const UserServicePage: React.FC = () => {
         navigate(`/editar-servicio/${serviceId}`);
     };
 
+    
+
     const handleDeleteService = (serviceId: string) => {
         const updatedServices = services.filter(service => service.ID_service !== serviceId);
         console.log(updatedServices);
