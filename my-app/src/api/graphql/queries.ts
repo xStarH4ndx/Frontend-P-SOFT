@@ -133,3 +133,13 @@ export const TOP_CINCO_SERVICIOS = gql`
     }
   }
 `;
+
+export const ACCEDER_QUERY = gql`
+query Acceder($username: String!, $password: String!) {
+  acceder(username: $username, password: $password) {
+    access_token
+    refresh_token
+  
+  }
+}
+`;

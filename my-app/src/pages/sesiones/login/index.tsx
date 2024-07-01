@@ -9,17 +9,8 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { ACCEDER_QUERY } from '../../../api/graphql/queries'
 
-const ACCEDER_QUERY = gql`
-  query Acceder($username: String!, $password: String!) {
-    acceder(username: $username, password: $password) {
-      access_token
-      refresh_token
-    
-    }
-  }
-`;
-console.log()
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const { getError, getSuccess } = useNotification();
@@ -40,7 +31,6 @@ export const LoginPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Datos de inicio de sesión:", loginData);
 
         try {
             const { data } = await refetch({
