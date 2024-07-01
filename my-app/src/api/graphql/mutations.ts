@@ -115,4 +115,18 @@ export const ELIMINAR_SERVICIO = gql`
 `;
 
 
-
+export const EDITAR_USUARIO = gql`
+  mutation EditarUsuario($usuarioDTO: UsuarioDTO!) {
+    editarUsuario(usuarioDTO: $usuarioDTO) {
+      id
+      firstname
+      lastname
+      username
+      telephone
+      roles {
+        id
+        name
+      }
+    }
+  }
+`;
