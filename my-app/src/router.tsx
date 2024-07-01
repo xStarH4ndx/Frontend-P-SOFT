@@ -8,10 +8,12 @@ import ServicePage from "./pages/clientes/servicios";
 import ConfirmServicePage from "./pages/clientes/servicios/confirmServices";
 import { RegisterPage } from "./pages/sesiones/registro/registro";
 import { CreateServicePage } from "./pages/proveedor/nnuevo/servicio";
-import { UserServicePage }from './tools/perfil/UserServicesPage';
-import {ResetPasswordPage} from "./pages/sesiones/login/resetearPass";
+import UserServicePage from './tools/perfil/UserServicesPage';
 import EditServicePage from './tools/perfil/EditServicePage';
 import { Perfil } from './pages/clientes/perfil/perfilUsuario'
+import ServiceDetailWrapper from "./pages/proveedor/nnuevo/ServiceDetailWrapper";
+import { ResetPasswordPage } from "./pages/sesiones/login/resetearPass";
+
 
 
 export const AppRouter: React.FC<{}> = () =>{
@@ -30,6 +32,8 @@ export const AppRouter: React.FC<{}> = () =>{
             <Route path="/mis-servicios" element={<UserServicePage />} />
             <Route path="/crear-servicio" element={<CreateServicePage />} />
             <Route path="/editar-servicio/:serviceId" element={<EditServicePage />} />
+            <Route path="/" element={<UserServicePage />} />
+            <Route path="/servicio/:serviceId" element={<ServiceDetailWrapper />} />
         </Routes>
     );
 };

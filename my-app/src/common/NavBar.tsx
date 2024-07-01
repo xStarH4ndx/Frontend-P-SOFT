@@ -7,7 +7,7 @@ export const NavBar: React.FC<{}> = () => {
     const navigate = useNavigate();
     const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
-    useEffect(() => {
+    useEffect(() => {  
         const userRegistered = localStorage.getItem('userRegistered');
         setIsRegistered(userRegistered === 'true');
     }, []);
