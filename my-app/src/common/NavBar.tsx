@@ -15,7 +15,7 @@ export const NavBar: React.FC<{}> = () => {
     const handleLogout = () => {
         localStorage.removeItem('userRegistered');
         setIsRegistered(false);
-        navigate("/login");
+        navigate("/");
     };
 
     return (
@@ -23,7 +23,8 @@ export const NavBar: React.FC<{}> = () => {
             <AppBar position="sticky">
                 <Toolbar>
                     <Container maxWidth="xl">
-                        <Grid container
+                        <Grid
+                            container
                             direction="row"
                             justifyContent="space-between"
                             alignItems="center"
@@ -40,14 +41,12 @@ export const NavBar: React.FC<{}> = () => {
                                     {isRegistered ? (
                                         <>
                                             <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
-                                            
                                             <Button variant="outlined" onClick={handleLogout}>Logout</Button>
                                         </>
                                     ) : (
                                         <>
                                             <Button variant="contained" onClick={() => navigate("/login")}>Login</Button>
                                             <Button variant="outlined" onClick={() => navigate("/registro")}>Sign in</Button>
-                                            <Button variant="contained" onClick={() => navigate("/mis-servicios")}>Mis Servicios</Button>
                                         </>
                                     )}
                                 </Stack>

@@ -10,6 +10,7 @@ import { RegisterPage } from "./pages/sesiones/registro/registro";
 import { CreateServicePage } from "./pages/proveedor/nnuevo/servicio";
 import UserServicePage from './tools/perfil/UserServicesPage';
 import EditServicePage from './tools/perfil/EditServicePage';
+import { Perfil } from './pages/clientes/perfil/perfilUsuario'
 import ServiceDetailWrapper from "./pages/proveedor/nnuevo/ServiceDetailWrapper";
 import { ResetPasswordPage } from "./pages/sesiones/login/resetearPass";
 
@@ -22,6 +23,7 @@ export const AppRouter: React.FC<{}> = () =>{
                 <Route path="/" element={<HomePage/>} />
                 <Route path="/servicios" element={<ServicePage/>} />
                 <Route path="/servicios/confirmacion" element={<ConfirmServicePage/>} />
+                <Route path="/perfil" element={<Perfil />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/recuperarContra" element={<RecoveryPage />} />

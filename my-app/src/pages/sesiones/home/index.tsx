@@ -86,29 +86,35 @@ export const HomePage: React.FC<{}> = () => {
         <Typography variant="h4" sx={{ textAlign: 'center', mb: 2, mt: 2, pl: { xs: 2, sm: 0 } }}>Servicios Populares</Typography>
       </div>
       <Grid container direction="column" alignItems="center" justifyContent="center">
-        {serviciosFiltrados.map((servicio: Servicio) => (
-          <Grid item key={servicio.id} sx={{ width: "100%" }}>
-            <Paper sx={{ borderRadius: "1.5em", height: "auto", mt: 3, display: "flex", alignItems: "center", p: 2 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={3} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <Avatar src={servicio.img} sx={{ width: 150, height: 150 }} />
+        {serviciosFiltrados.length === 0 ? (
+          <Typography variant="h6" color="textSecondary">
+            No hay servicios disponibles :(
+          </Typography>
+        ) : (
+          serviciosFiltrados.map((servicio: Servicio) => (
+            <Grid item key={servicio.id} sx={{ width: "100%" }}>
+              <Paper sx={{ borderRadius: "1.5em", height: "auto", mt: 3, display: "flex", alignItems: "center", p: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={3} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Avatar src={servicio.img} sx={{ width: 150, height: 150 }} />
+                  </Grid>
+                  <Grid item xs={5} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                    <Typography variant="h6">{`Servicio: ${servicio.nombre}`}</Typography>
+                    <Typography variant="body1">{`Autor: ${servicio.autor.firstname} ${servicio.autor.lastname}`}</Typography>
+                    <Typography variant="body1">{`Costo: ${servicio.costo}`}</Typography>
+                    <Typography variant="body1">{`Dirección: ${servicio.direccion}`}</Typography>
+                    <Typography variant="body1">{`Evaluaciones: ${servicio.evaluaciones}`}</Typography>
+                  </Grid>
+                  <Grid item xs={4} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                    <Button variant="contained" color="primary" onClick={() => handleRequestService(servicio)}>
+                      Solicitar
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={5} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                  <Typography variant="h6">{`Servicio: ${servicio.nombre}`}</Typography>
-                  <Typography variant="body1">{`Autor: ${servicio.autor.firstname} ${servicio.autor.lastname}`}</Typography>
-                  <Typography variant="body1">{`Costo: ${servicio.costo}`}</Typography>
-                  <Typography variant="body1">{`Dirección: ${servicio.direccion}`}</Typography>
-                  <Typography variant="body1">{`Evaluaciones: ${servicio.evaluaciones}`}</Typography>
-                </Grid>
-                <Grid item xs={4} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                  <Button variant="contained" color="primary" onClick={() => handleRequestService(servicio)}>
-                    Solicitar
-                  </Button>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
-        ))}
+              </Paper>
+            </Grid>
+          ))
+        )}
       </Grid>
       <div style={{ marginTop: "50px" }}>
         <Divider />
