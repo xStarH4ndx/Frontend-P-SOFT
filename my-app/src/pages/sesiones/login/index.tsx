@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNotification } from "../../../tools/context/notification.context";
 import { useNavigate, Link } from "react-router-dom";
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -9,17 +9,8 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { ACCEDER_QUERY } from '../../../api/graphql/queries'
 
-const ACCEDER_QUERY = gql`
-  query Acceder($username: String!, $password: String!) {
-    acceder(username: $username, password: $password) {
-      access_token
-      refresh_token
-    
-    }
-  }
-`;
-console.log()
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const { getError, getSuccess } = useNotification();
@@ -40,7 +31,6 @@ export const LoginPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Datos de inicio de sesión:", loginData);
 
         try {
             const { data } = await refetch({
@@ -50,6 +40,7 @@ export const LoginPage: React.FC = () => {
 
             if (data && data.acceder) {
                 console.log("Respuesta exitosa del servidor:", data);
+                localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('access_token', data.acceder.access_token);
                 localStorage.setItem('refresh_token', data.acceder.refresh_token);
 
