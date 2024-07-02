@@ -13,7 +13,7 @@ import EditServicePage from './tools/perfil/EditServicePage';
 import { Perfil } from './pages/clientes/perfil/perfilUsuario'
 import ServiceDetailWrapper from "./pages/proveedor/nnuevo/ServiceDetailWrapper";
 import { ResetPasswordPage } from "./pages/sesiones/login/resetearPass";
-
+import ReservationPage from "./pages/proveedor/nnuevo/ReservationPage";
 
 
 export const AppRouter: React.FC<{}> = () =>{
@@ -34,6 +34,8 @@ export const AppRouter: React.FC<{}> = () =>{
             <Route path="/editar-servicio/:serviceId" element={<EditServicePage />} />
             <Route path="/" element={<UserServicePage />} />
             <Route path="/servicio/:serviceId" element={<ServiceDetailWrapper />} />
+
+            <Route path="/solicitud-servicio/:id_servicio/:horario" element={<ReservationPage/>} />
         </Routes>
     );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Typography, Grid, Box, Avatar, Button, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Cambiar useHistory por useNavigate
 
 type ServiceType = {
     ID_service: string;
@@ -8,7 +9,7 @@ type ServiceType = {
     Costo: number;
     direccion: string;
     tipoServicio: string;
-    horarios: string[]; // Nuevo campo para horarios
+    horarios: string[];
 };
 
 interface ServiceDetailPageProps {
@@ -22,14 +23,13 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
     const [editedService, setEditedService] = useState<ServiceType | null>(service);
     const [newHorario, setNewHorario] = useState<string>("");
 
-    // Manejar la edición del servicio
+    const navigate = useNavigate(); // Usar useNavigate en lugar de useHistory
+
     const handleEditService = () => {
         setIsEditing(true);
-        // Al comenzar la edición, establecer el estado de editedService en el servicio actual
         setEditedService(service);
     };
 
-    // Guardar los cambios realizados al servicio
     const handleSaveService = () => {
         if (editedService) {
             onSave(editedService);
@@ -37,18 +37,15 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
-    // Cancelar la edición y volver al estado original del servicio
     const handleCancelEdit = () => {
         setIsEditing(false);
-        setEditedService(service); // Reiniciar cambios
+        setEditedService(service);
     };
 
-    // Eliminar el servicio
     const handleDeleteService = () => {
         onDelete();
     };
 
-    // Manejar el cambio en los campos del servicio
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (editedService) {
@@ -59,7 +56,6 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
-    // Manejar el cambio en los horarios existentes
     const handleChangeHorario = (index: number, value: string) => {
         if (editedService) {
             const updatedHorarios = [...editedService.horarios];
@@ -71,7 +67,6 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
-    // Eliminar un horario existente
     const handleDeleteHorario = (index: number) => {
         if (editedService) {
             const updatedHorarios = [...editedService.horarios];
@@ -83,7 +78,6 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
-    // Agregar un nuevo horario
     const handleAddHorario = () => {
         if (editedService && newHorario.trim() !== "") {
             setEditedService({
@@ -92,6 +86,10 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
             });
             setNewHorario("");
         }
+    };
+
+    const handleReserveHour = (horario: string) => {
+        navigate(`/solicitud-servicio/${service?.ID_service}/${horario}`);
     };
 
     if (!service) {
@@ -112,7 +110,7 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                             height: 0,
                             paddingBottom: '100%',
                             position: 'relative',
-                            backgroundColor: '#4682B4' // Celeste más oscuro
+                            backgroundColor: '#4682B4'
                         }}
                     >
                         {service.fotos.length > 0 && (
@@ -237,7 +235,13 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                                     <Typography variant="h6">Horarios:</Typography>
                                     {service.horarios.map((horario, index) => (
                                         <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                                            <Typography>{horario}</Typography>
+                                            <Button
+                                                variant="outlined"
+                                                onClick={() => handleReserveHour(horario)}
+                                                sx={{ borderColor: 'black', color: 'black', mr: 2 }}
+                                            >
+                                                {horario}
+                                            </Button>
                                         </Box>
                                     ))}
                                 </Box>
@@ -251,5 +255,3 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
 };
 
 export default ServiceDetailPage;
-
-

@@ -7,7 +7,7 @@ export const NavBar: React.FC<{}> = () => {
     const navigate = useNavigate();
     const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
-    useEffect(() => {  
+    useEffect(() => {
         const userRegistered = localStorage.getItem('userRegistered');
         setIsRegistered(userRegistered === 'true');
     }, []);
@@ -40,6 +40,7 @@ export const NavBar: React.FC<{}> = () => {
                                 <Stack direction="row" spacing={2}>
                                     {isRegistered ? (
                                         <>
+                                            <Button variant="contained" onClick={() => navigate("/mis-servicios")}>Mis Servicios</Button>
                                             <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
                                             <Button variant="outlined" onClick={handleLogout}>Logout</Button>
                                         </>
@@ -58,3 +59,4 @@ export const NavBar: React.FC<{}> = () => {
         </Box>
     );
 };
+
