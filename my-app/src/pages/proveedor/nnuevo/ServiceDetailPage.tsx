@@ -8,6 +8,7 @@ type ServiceType = {
     Costo: number;
     direccion: string;
     tipoServicio: string;
+    horarios: string[]; // Nuevo campo para horarios
 };
 
 interface ServiceDetailPageProps {
@@ -19,19 +20,16 @@ interface ServiceDetailPageProps {
 const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedService, setEditedService] = useState<ServiceType | null>(service);
+    const [newHorario, setNewHorario] = useState<string>("");
 
-    if (!service) {
-        return (
-            <Container>
-                <Typography variant="h4">Servicio no encontrado</Typography>
-            </Container>
-        );
-    }
-
+    // Manejar la edición del servicio
     const handleEditService = () => {
         setIsEditing(true);
+        // Al comenzar la edición, establecer el estado de editedService en el servicio actual
+        setEditedService(service);
     };
 
+    // Guardar los cambios realizados al servicio
     const handleSaveService = () => {
         if (editedService) {
             onSave(editedService);
@@ -39,6 +37,18 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
+    // Cancelar la edición y volver al estado original del servicio
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setEditedService(service); // Reiniciar cambios
+    };
+
+    // Eliminar el servicio
+    const handleDeleteService = () => {
+        onDelete();
+    };
+
+    // Manejar el cambio en los campos del servicio
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (editedService) {
@@ -49,14 +59,48 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
-    const handleCancelEdit = () => {
-        setIsEditing(false);
-        setEditedService(service); // Reiniciar cambios
+    // Manejar el cambio en los horarios existentes
+    const handleChangeHorario = (index: number, value: string) => {
+        if (editedService) {
+            const updatedHorarios = [...editedService.horarios];
+            updatedHorarios[index] = value;
+            setEditedService({
+                ...editedService,
+                horarios: updatedHorarios
+            });
+        }
     };
 
-    const handleDeleteService = () => {
-        onDelete();
+    // Eliminar un horario existente
+    const handleDeleteHorario = (index: number) => {
+        if (editedService) {
+            const updatedHorarios = [...editedService.horarios];
+            updatedHorarios.splice(index, 1);
+            setEditedService({
+                ...editedService,
+                horarios: updatedHorarios
+            });
+        }
     };
+
+    // Agregar un nuevo horario
+    const handleAddHorario = () => {
+        if (editedService && newHorario.trim() !== "") {
+            setEditedService({
+                ...editedService,
+                horarios: [...editedService.horarios, newHorario]
+            });
+            setNewHorario("");
+        }
+    };
+
+    if (!service) {
+        return (
+            <Container>
+                <Typography variant="h4">Servicio no encontrado</Typography>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="md">
@@ -133,6 +177,43 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                                     type="number"
                                 />
                                 <Box sx={{ mt: 2 }}>
+                                    <Typography variant="h6">Editar Horarios:</Typography>
+                                    {editedService?.horarios.map((horario, index) => (
+                                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                                            <TextField
+                                                value={horario}
+                                                onChange={(e) => handleChangeHorario(index, e.target.value)}
+                                                fullWidth
+                                                margin="normal"
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                color="error"
+                                                onClick={() => handleDeleteHorario(index)}
+                                                sx={{ ml: 2 }}
+                                            >
+                                                Eliminar
+                                            </Button>
+                                        </Box>
+                                    ))}
+                                    <Box sx={{ mt: 2 }}>
+                                        <TextField
+                                            value={newHorario}
+                                            onChange={(e) => setNewHorario(e.target.value)}
+                                            fullWidth
+                                            margin="normal"
+                                            placeholder="Agregar nuevo horario"
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleAddHorario}
+                                            sx={{ mt: 1 }}
+                                        >
+                                            Agregar Horario
+                                        </Button>
+                                    </Box>
+                                </Box>
+                                <Box sx={{ mt: 2 }}>
                                     <Button variant="contained" color="primary" onClick={handleSaveService} sx={{ mr: 2 }}>Guardar</Button>
                                     <Button variant="contained" onClick={handleCancelEdit}>Cancelar</Button>
                                 </Box>
@@ -151,6 +232,14 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                                     <Button variant="contained" color="error" onClick={handleDeleteService}>
                                         Eliminar
                                     </Button>
+                                </Box>
+                                <Box sx={{ mt: 2 }}>
+                                    <Typography variant="h6">Horarios:</Typography>
+                                    {service.horarios.map((horario, index) => (
+                                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                                            <Typography>{horario}</Typography>
+                                        </Box>
+                                    ))}
                                 </Box>
                             </>
                         )}
