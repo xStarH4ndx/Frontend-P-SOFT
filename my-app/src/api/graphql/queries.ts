@@ -18,6 +18,48 @@ export const LISTAR_USUARIOS = gql`
   }
 `;
 
+export const OBTENER_SERVICIO = gql`
+  query ObtenerServicio($servicioId: Int!) {
+    obtenerServicio(servicioId: $servicioId) {
+      id
+      nombre
+      costo
+      direccion
+      coordenadasEmisorX
+      coordenadasEmisorY
+      coordenadasReceptorX
+      coordenadasReceptorY
+      fotos
+      categorias
+      comentarios {
+        id
+        comentario
+        usuario {
+          id
+          firstname
+          lastname
+        }
+      }
+      evaluaciones {
+        id
+        puntuacion
+        usuario {
+          id
+          firstname
+          lastname
+        }
+      }
+      autor {
+        id
+        firstname
+        lastname
+      }
+      fechaInicio
+      fechaFin
+    }
+  }
+`;
+
 export const OBTENER_USUARIO = gql`
   query obtenerUsuario($id: Int!) {
     obtenerUsuario(id: $id) {

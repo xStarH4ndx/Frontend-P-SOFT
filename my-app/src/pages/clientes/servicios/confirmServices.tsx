@@ -1,229 +1,107 @@
-import React, { useState, useEffect } from "react";
-import { Container, Grid, Typography, Button, Paper, Divider, Avatar, TextField, Rating, CircularProgress, Box } from "@mui/material";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { useMutation } from "@apollo/client";
-import { EVALUAR_SERVICIO, COMENTAR_SERVICIO } from "../../../api/graphql/mutations";
+import React, { useState } from 'react';
+import { Container, Typography, Paper, Grid, TextField, Button, Rating } from '@mui/material';
+import { useMutation, useQuery } from '@apollo/client';
+import { useParams } from 'react-router-dom';
+import { OBTENER_SERVICIO } from '../../../api/graphql/queries';
+import { EVALUAR_SERVICIO, COMENTAR_SERVICIO } from '../../../api/graphql/mutations'; // Ajusta la ruta según tu estructura de archivos
 
-type ReservationData = {
-    serviceId: string;
-    horario: string;
-    userName: string;
-    userContact: string;
-    additionalInfo?: string;
-    fechaInicio: string;
-    fechaFin: string;
-};
+const ConfirmServicePage: React.FC = () => {
+    const { idService } = useParams(); // Obtener el idService desde los parámetros de la URL
+    const [comment, setComment] = useState('');
+    const [rating, setRating] = useState<number | null>(0); // Valor inicial para las estrellas
 
-const ConfirmServicePage: React.FC<{}> = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { idService, horario, fechaInicio, fechaFin } = useParams<{ idService: string; horario: string; fechaInicio: string; fechaFin: string }>();
-    const reservationData = location.state as ReservationData;
+    // Consultar el servicio por ID usando useQuery de Apollo Client
+    const { loading, error, data } = useQuery(OBTENER_SERVICIO, {
+        variables: { servicioId: parseInt(idService!) }
+    });
 
-    const [newComment, setNewComment] = useState<string>("");
-    const [newRating, setNewRating] = useState<number | null>(null);
-    const [comments, setComments] = useState<{ comentario: string, usuario: { firstname: string, lastname: string, avatar: string } }[]>([]);
-    const [ratings, setRatings] = useState<number[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    // Mutaciones de GraphQL
+    const [evaluarServicio] = useMutation(EVALUAR_SERVICIO); // Utiliza la definición de mutación EVALUAR_SERVICIO
+    const [comentarServicio] = useMutation(COMENTAR_SERVICIO); // Utiliza la definición de mutación COMENTAR_SERVICIO
 
-    const [addComment] = useMutation(COMENTAR_SERVICIO);
-    const [addRating] = useMutation(EVALUAR_SERVICIO);
-
-    useEffect(() => {
-        if (reservationData) {
-            // Simulación de carga de datos
-            setTimeout(() => {
-                setComments([
-                    { comentario: "¡Excelente servicio!", usuario: { firstname: "Usuario", lastname: "Ejemplo", avatar: "" } }
-                ]);
-                setRatings([5]);
-            }, 1000);
-        } else {
-            console.error("No se han encontrado los datos de reserva en el estado.");
-        }
-    }, [reservationData]);
-
-    const handleAddComment = async () => {
-        if (newComment.trim() !== "") {
-            try {
-                const { data } = await addComment({
-                    variables: {
-                        servicioId: reservationData.serviceId,
-                        usuarioId: 21,  // Asegúrate de tener el ID del usuario correcto
-                        comentarioDTO: {
-                            comentario: newComment,
-                            usuario: 21  // Asegúrate de tener el ID del usuario correcto
-                        }
-                    },
-                });
-                const nuevoComentario = data.comentarServicio;
-                setComments([...comments, nuevoComentario]);
-                setNewComment("");
-            } catch (error) {
-                console.error("Error al añadir comentario:", error);
-            }
+    // Función para manejar el envío del comentario
+    const handleCommentSubmit = async () => {
+        try {
+            // Ejecutar la mutación para comentar el servicio
+            await comentarServicio({
+                variables: { comentario: comment, servicioId: parseInt(idService!), usuarioId: 1 } // Ajusta el usuarioId según tu lógica
+            });
+            // Limpiar el campo de comentario después de enviar
+            setComment('');
+        } catch (error) {
+            console.error('Error al enviar comentario:', error);
         }
     };
 
-    const handleAddRating = async () => {
-        if (newRating !== null) {
-            try {
-                const { data } = await addRating({
-                    variables: {
-                        servicioId: reservationData.serviceId,
-                        usuarioId: 21,  // Asegúrate de tener el ID del usuario correcto
-                        evaluacionDTO: {
-                            puntuacion: newRating,
-                            usuario: 21  // Asegúrate de tener el ID del usuario correcto
-                        }
-                    },
-                });
-                const nuevaEvaluacion = data.evaluarServicio;
-                setRatings([...ratings, nuevaEvaluacion.puntuacion]);
-                setNewRating(null);
-            } catch (error) {
-                console.error("Error al añadir evaluación:", error);
-            }
+    // Función para manejar la evaluación del servicio
+    const handleRatingChange = async (newRating: number | null) => {
+        try {
+            // Ejecutar la mutación para evaluar el servicio
+            await evaluarServicio({
+                variables: { servicioId: parseInt(idService!), usuarioId: 1, puntuacion: newRating || 0 } // Ajusta el usuarioId según tu lógica
+            });
+            // Actualizar el estado de la valoración
+            setRating(newRating);
+        } catch (error) {
+            console.error('Error al evaluar servicio:', error);
         }
     };
 
-    const handleViewMoreServices = () => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            navigate("/servicios");
-        }, 1500);
-    };
-
-    const averageRating =
-        ratings.length > 0
-            ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
-            : "No hay evaluaciones";
+    if (loading) return <p>Cargando...</p>;
+    if (error) return <p>Error al cargar el servicio.</p>;
 
     return (
-        <Container>
-            {loading ? (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
+        <Container maxWidth="md" sx={{ mt: 4 }}>
+            <Typography variant="h4" gutterBottom>
+                ¡Servicio Confirmado!
+            </Typography>
+            {/* Detalles del servicio */}
+            <Paper sx={{ p: 2, mt: 3 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={8}>
+                        <Typography variant="h6">Detalles del Servicio</Typography>
+                        <Typography variant="body1">{`Nombre del Servicio: ${data.obtenerServicio.nombre}`}</Typography>
+                        <Typography variant="body1">{`Costo: ${data.obtenerServicio.costo}`}</Typography>
+                        <Typography variant="body1">{`Dirección: ${data.obtenerServicio.direccion}`}</Typography>
+                        {/* Otros detalles del servicio según tu estructura de datos */}
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Typography variant="h6">Precio</Typography>
+                        <Typography variant="body1">{`$${data.obtenerServicio.costo}`}</Typography>
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            {/* Sección de comentarios y evaluación */}
+            <Paper sx={{ mt: 3, p: 2 }}>
+                <Typography variant="h6">Comentarios</Typography>
+                {/* Listado de comentarios */}
+                {data.obtenerServicio.comentarios.map((comentario: any) => (
+                    <Typography key={comentario.id} variant="body1">{comentario.comentario}</Typography>
+                ))}
+
+                {/* Formulario para comentar */}
+                <TextField
+                    label="Publicar comentario"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <Button variant="contained" color="primary" onClick={handleCommentSubmit}>
+                    Enviar comentario
+                </Button>
+
+                {/* Valoración del servicio */}
+                <Typography variant="h6" sx={{ mt: 3 }}>Valoración del Servicio</Typography>
+                <Rating
+                    name="rating"
+                    value={rating}
+                    onChange={(event, newValue) => {
+                        handleRatingChange(newValue);
                     }}
-                >
-                    <CircularProgress />
-                </Box>
-            ) : (
-                reservationData ? (
-                    <>
-                        <Grid container justifyContent="center">
-                            <Typography variant="h4" sx={{ mt: 2, mb: 2 }}>
-                                ¡Solicitud Realizada!
-                            </Typography>
-                        </Grid>
-                        <Divider />
-                        <Paper sx={{ p: 3, mt: 3 }}>
-                            <Grid container spacing={2}>
-                                <Grid
-                                    item
-                                    xs={3}
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Avatar
-                                        src={""}  // Asegúrate de tener la imagen correcta
-                                        sx={{ width: 150, height: 150 }}
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={5}
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Typography variant="h6">{`Servicio: ${reservationData.serviceId}`}</Typography>
-                                    <Typography variant="body1">{`Horario: ${reservationData.horario}`}</Typography>
-                                    <Typography variant="body1">{`Fecha de Inicio: ${fechaInicio}`}</Typography>
-                                    <Typography variant="body1">{`Fecha de Fin: ${fechaFin}`}</Typography>
-                                    <Typography variant="body1">{`Usuario: ${reservationData.userName}`}</Typography>
-                                    <Typography variant="body1">{`Contacto: ${reservationData.userContact}`}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                        <Paper sx={{ mt: 3, p: 2 }}>
-                            <Typography variant="h6">Comentarios:</Typography>
-                            {comments.length > 0 ? (
-                                comments.map((comment, index) => (
-                                    <Paper key={index} sx={{ p: 2, mt: 2 }}>
-                                        <Grid container spacing={2}>
-                                            <Grid item>
-                                                <Avatar src={comment.usuario.avatar} />
-                                            </Grid>
-                                            <Grid item xs>
-                                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                                    {`${comment.usuario.firstname} ${comment.usuario.lastname}`}
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    {comment.comentario}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                ))
-                            ) : (
-                                <Typography variant="body2">No hay comentarios aún</Typography>
-                            )}
-                            <TextField
-                                label="Añadir comentario"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                multiline
-                                rows={4}
-                            />
-                            <Button variant="contained" color="primary" onClick={handleAddComment}>
-                                Añadir Comentario
-                            </Button>
-                        </Paper>
-                        <Paper sx={{ mt: 3, p: 2 }}>
-                            <Typography variant="h6">Evaluaciones:</Typography>
-                            <Rating
-                                name="average-rating"
-                                value={parseFloat(averageRating)}
-                                precision={0.1}
-                                readOnly
-                            />
-                            <Typography variant="body2" sx={{ ml: 2 }}>
-                                {averageRating} ({ratings.length} evaluaciones)
-                            </Typography>
-                            <Rating
-                                name="new-rating"
-                                value={newRating}
-                                onChange={(event, newValue) => {
-                                    setNewRating(newValue);
-                                }}
-                            />
-                            <Button variant="contained" color="primary" onClick={handleAddRating}>
-                                Añadir Evaluación
-                            </Button>
-                        </Paper>
-                        <Box sx={{ mt: 3 }}>
-                            <Button variant="outlined" onClick={handleViewMoreServices}>
-                                Ver Más Servicios
-                            </Button>
-                        </Box>
-                    </>
-                ) : (
-                    <Typography variant="body1">No se encontraron datos de reserva válidos.</Typography>
-                )
-            )}
+                />
+            </Paper>
         </Container>
     );
 };

@@ -1,101 +1,85 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Typography, TextField, Button, Box } from "@mui/material";
-
-type ReservationData = {
-    serviceId: string;
-    userName: string;
-    userContact: string;
-    additionalInfo?: string;
-    fechaInicio: string;
-    fechaFin: string;
-    id: number;
-    nombre: string;
-    costo: number;
-    direccion: string;
-    autorNombreCompleto: string;
-    comentarios: string;
-    evaluaciones: number;
-    imagenUrl: string;
-};
+import React, { useState } from 'react';
+import { Container, Typography, TextField, Button, Grid, Paper } from '@mui/material';
+import { useQuery } from '@apollo/client';
+import { useParams, useNavigate } from 'react-router-dom';
+import { OBTENER_SERVICIO } from '../../../api/graphql/queries';
 
 const ReservationPage: React.FC = () => {
-    const { id_servicio, fechaInicio, fechaFin } = useParams<{ id_servicio: string; fechaInicio: string; fechaFin: string }>();
-    const [userName, setUserName] = useState("");
-    const [userContact, setUserContact] = useState("");
-    const [additionalInfo, setAdditionalInfo] = useState("");
     const navigate = useNavigate();
+    const { idService } = useParams(); // Obtener el idService desde los parámetros de la URL
 
-    // Obtener la información del servicio desde la ubicación
-    const locationState = window.history.state.state as ReservationData;
+    // Estado local para manejar la información del servicio y entradas del usuario
+    const [clientName, setClientName] = useState('');
+    const [contact, setContact] = useState('');
 
-    // Manejar la reserva del servicio
-    const handleSave = () => {
-        const reservationData: ReservationData = {
-            serviceId: id_servicio!,
-            userName,
-            userContact,
-            additionalInfo,
-            fechaInicio: locationState.fechaInicio,
-            fechaFin: locationState.fechaFin,
-            id: locationState.id,
-            nombre: locationState.nombre,
-            costo: locationState.costo,
-            direccion: locationState.direccion,
-            autorNombreCompleto: locationState.autorNombreCompleto,
-            comentarios: locationState.comentarios,
-            evaluaciones: locationState.evaluaciones,
-            imagenUrl: locationState.imagenUrl,
-        };
+    // Consultar el servicio por ID usando useQuery de Apollo Client
+    const { loading, error, data } = useQuery(OBTENER_SERVICIO, {
+        variables: { servicioId: idService ? parseInt(idService) : undefined }, // Convertir a número si idService no es undefined
+    });
 
-        // Aquí puedes manejar la lógica para guardar la reserva, por ejemplo, enviando los datos a un servidor.
-        console.log("Datos de la reserva:", reservationData);
+    // Manejar la función de reserva del servicio
+    const handleReservation = () => {
+        // Aquí puedes manejar la lógica para reservar el servicio
+        console.log('Nombre del cliente:', clientName);
+        console.log('Contacto:', contact);
+        // Puedes realizar acciones adicionales como enviar datos a un servidor
 
-        // Navegar a ConfirmServicePage y pasar los datos de la reserva como estado de ubicación
-        navigate(`/confirmar-servicio/${id_servicio}/${locationState.fechaInicio}`, { state: { ...reservationData } });
+        // Redirigir a la página de confirmación
+        navigate(`/confirmar-servicio/${idService}`);
     };
 
+    if (loading) return <p>Cargando...</p>;
+    if (error) return <p>Error al cargar el servicio.</p>;
+
     return (
-        <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Container maxWidth="md" sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
                 Reservar Servicio
             </Typography>
-            <Typography variant="h6" gutterBottom>
-                Servicio Seleccionado: {locationState?.nombre}
-            </Typography>
-            <Typography variant="body1">Costo: {locationState?.costo}</Typography>
-            <Typography variant="body1">Dirección: {locationState?.direccion}</Typography>
-            <Typography variant="body1">Evaluaciones: {locationState?.evaluaciones}</Typography>
-            <Typography variant="body1">Autor: {locationState?.autorNombreCompleto}</Typography>
-            <Typography variant="body1">Comentarios: {locationState?.comentarios}</Typography>
-            <TextField
-                label="Nombre"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Contacto"
-                value={userContact}
-                onChange={(e) => setUserContact(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Información Adicional"
-                value={additionalInfo}
-                onChange={(e) => setAdditionalInfo(e.target.value)}
-                fullWidth
-                margin="normal"
-                multiline
-                rows={4}
-            />
-            <Box sx={{ mt: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleSave}>
-                    Confirmar Reserva
-                </Button>
-            </Box>
+            <Paper
+                sx={{
+                    borderRadius: '1.5em',
+                    height: 'auto',
+                    mt: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    p: 2,
+                }}
+            >
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">{`Servicio: ${data.obtenerServicio.nombre}`}</Typography>
+                        <Typography variant="body1">{`Costo: ${data.obtenerServicio.costo}`}</Typography>
+                        <Typography variant="body1">{`Dirección: ${data.obtenerServicio.direccion}`}</Typography>
+                        {/* Otros detalles del servicio */}
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Nombre del Cliente"
+                            value={clientName}
+                            onChange={(e) => setClientName(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Contacto"
+                            value={contact}
+                            onChange={(e) => setContact(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sx={{ mt: 2 }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleReservation}
+                        >
+                            Reservar
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Paper>
         </Container>
     );
 };

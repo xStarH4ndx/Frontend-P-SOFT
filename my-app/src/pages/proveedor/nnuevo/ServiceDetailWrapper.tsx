@@ -19,7 +19,7 @@ interface LocationState {
 
 const ServiceDetailWrapper: React.FC<{}> = () => {
     const location = useLocation();
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Hook de React Router para la navegación
     const {
         id,
         nombre,
@@ -39,6 +39,7 @@ const ServiceDetailWrapper: React.FC<{}> = () => {
     const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
     const [actualizarServicio] = useMutation(ACTUALIZAR_SERVICIO);
 
+    // Función para manejar la asignación de horarios
     const handleAssignSchedule = async () => {
         setLoading(true);
         try {
@@ -47,24 +48,22 @@ const ServiceDetailWrapper: React.FC<{}> = () => {
                     servicioDTO: {
                         id,
                         nombre,
-                        autor: 4, // Reemplazar con el autor adecuado si es dinámico
+                        autor: 4, // Aquí deberías usar el autor dinámico obtenido previamente
                         fechaInicio,
                         fechaFin,
+                        costo,
+                        direccion,
                     },
                 },
             });
             console.log('Servicio actualizado:', data);
             setSnackbarOpen(true);
+
+            // Después de actualizar el servicio, navegar a la página de reserva con los datos actualizados
+            navigate(`/reservar-servicio/${id}/${fechaInicio}`);
         } catch (error: any) {
             console.error('Error al actualizar el servicio:', error);
-            if (error.graphQLErrors) {
-                error.graphQLErrors.forEach(({ message, locations, path }: { message: string, locations: any[], path: string[] }) =>
-                    console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
-                );
-            }
-            if (error.networkError) {
-                console.log(`[Network error]: ${error.networkError}`);
-            }
+            // Manejo de errores
         } finally {
             setLoading(false);
         }
