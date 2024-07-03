@@ -20,6 +20,8 @@ interface Servicio {
     comentarios: string;
     img: string;
     autor: Autor;
+    fechaInicio:string;
+    fechaFinal:string;
 }
 
 const ServicePage: React.FC<{}> = () => {
@@ -82,7 +84,7 @@ const ServicePage: React.FC<{}> = () => {
         setTimeout(() => {
             setLoadingRequest(false);
             const autorNombreCompleto = `${elemento.autor.firstname} ${elemento.autor.lastname}`;
-            navigate("confirmacion", {
+            navigate(`/reservar/${elemento.id}/${elemento.fechaInicio}`, {
                 state: {
                     ...elemento,
                     autorNombreCompleto,
@@ -93,6 +95,7 @@ const ServicePage: React.FC<{}> = () => {
             setSnackbarOpen(true);
         }, 1500); // Simular una carga de 1.5 segundos antes de navegar
     };
+    
 
     return (
         <Container>
