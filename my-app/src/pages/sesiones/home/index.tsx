@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { Button, Container, Divider, Grid, Paper, Typography, CircularProgress, Avatar } from '@mui/material';
+import { Button, Container, Divider, Grid, Paper, Typography, CircularProgress, Avatar, Snackbar } from '@mui/material';
 import { HeaderComponent } from "../../../components";
 import { useNavigate } from "react-router";
 import { LISTAR_SERVICIOS } from "../../../api/graphql/queries"; // Asegúrate de importar tu consulta correctamente
@@ -25,6 +25,7 @@ export const HomePage: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false); // Estado para controlar la pantalla de carga
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Estado para verificar si el usuario está autenticado
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
   const { data, loading: queryLoading, error } = useQuery(LISTAR_SERVICIOS);
 
@@ -80,15 +81,22 @@ export const HomePage: React.FC<{}> = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate("/servicios/confirmacion", {
+      navigate(`/servicio/detalles`, {
         state: {
-          ...elemento,
+          id: elemento.id,
+          nombre: elemento.nombre,
+          costo: elemento.costo,
+          direccion: elemento.direccion,
           autorNombreCompleto: `${elemento.autor.firstname} ${elemento.autor.lastname}`,
           comentarios: elemento.comentarios,
           evaluaciones: elemento.evaluaciones,
+          imagenUrl: elemento.img,
+          fechaInicio: '',
+          fechaFin: ''
         },
       });
-    }, 1500);
+      setSnackbarOpen(true);
+    }, 1500); // Simular una carga de 1.5 segundos antes de navegar
   };
 
   return (
@@ -160,6 +168,13 @@ export const HomePage: React.FC<{}> = () => {
           <CircularProgress color="primary" />
         </div>
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Solicitud Confirmada"
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      />
     </Container>
   );
 };

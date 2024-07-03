@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNotification } from "../../../tools/context/notification.context";
 import { useNavigate, Link } from "react-router-dom";
-import { useQuery, gql, useApolloClient } from '@apollo/client';
-import {jwtDecode} from 'jwt-decode'; // Importa jwt-decode correctamente
+import { useQuery, useApolloClient } from '@apollo/client';
+import {jwtDecode} from 'jwt-decode';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -52,6 +52,9 @@ export const LoginPage: React.FC = () => {
                 console.log("Datos del usuario logueado:", decodedToken);
                 const userId = decodedToken.id;
                 console.log("El id del usuario logueado es:", userId);
+
+                // Guardar el userId en localStorage
+                localStorage.setItem('userId', userId);
 
                 // Obtener detalles del usuario
                 const { data: userData } = await client.query({

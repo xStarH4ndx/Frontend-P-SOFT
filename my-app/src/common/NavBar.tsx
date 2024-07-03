@@ -8,7 +8,7 @@ export const NavBar: React.FC<{}> = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [userRole, setUserRole] = useState<number | null>(null);
 
-    useEffect(() => {  
+    useEffect(() => {
         const checkLoggedInStatus = () => {
             const accessToken = localStorage.getItem('accessToken');
             const user = localStorage.getItem('user');
@@ -29,12 +29,11 @@ export const NavBar: React.FC<{}> = () => {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
+        localStorage.clear(); // Limpiar completamente el localStorage
         setIsLoggedIn(false);
         setUserRole(null);
         navigate("/");
+        window.location.reload(); // Refrescar la página automáticamente
     };
 
     return (
@@ -69,7 +68,6 @@ export const NavBar: React.FC<{}> = () => {
                                             {userRole === 2 && (
                                                 <Button variant="contained" onClick={() => navigate("/mis-servicios")}>Mis Servicios</Button>
                                             )}
-
                                             <Button variant="outlined" onClick={handleLogout}>Logout</Button>
                                         </>
                                     ) : (
@@ -78,7 +76,6 @@ export const NavBar: React.FC<{}> = () => {
                                             <Button variant="outlined" onClick={() => navigate("/registro")}>Sign in</Button>
                                         </>
                                     )}
-
                                 </Stack>
                             </Grid>
                         </Grid>
