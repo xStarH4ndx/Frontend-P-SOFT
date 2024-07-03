@@ -10,12 +10,14 @@ type ReservationData = {
     userName: string;
     userContact: string;
     additionalInfo?: string;
+    fechaInicio: string;
+    fechaFin: string;
 };
 
 const ConfirmServicePage: React.FC<{}> = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { idService, horario } = useParams<{ idService: string; horario: string }>();
+    const { idService, horario, fechaInicio, fechaFin } = useParams<{ idService: string; horario: string; fechaInicio: string; fechaFin: string }>();
     const reservationData = location.state as ReservationData;
 
     const [newComment, setNewComment] = useState<string>("");
@@ -147,6 +149,8 @@ const ConfirmServicePage: React.FC<{}> = () => {
                                 >
                                     <Typography variant="h6">{`Servicio: ${reservationData.serviceId}`}</Typography>
                                     <Typography variant="body1">{`Horario: ${reservationData.horario}`}</Typography>
+                                    <Typography variant="body1">{`Fecha de Inicio: ${fechaInicio}`}</Typography>
+                                    <Typography variant="body1">{`Fecha de Fin: ${fechaFin}`}</Typography>
                                     <Typography variant="body1">{`Usuario: ${reservationData.userName}`}</Typography>
                                     <Typography variant="body1">{`Contacto: ${reservationData.userContact}`}</Typography>
                                 </Grid>
@@ -177,59 +181,47 @@ const ConfirmServicePage: React.FC<{}> = () => {
                             )}
                             <TextField
                                 label="Añadir comentario"
-                                variant="outlined"
-                                fullWidth
-                                multiline
-                                rows={4}
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
-                                sx={{ mt: 2 }}
+                                fullWidth
+                                margin="normal"
+                                multiline
+                                rows={4}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleAddComment}
-                                sx={{ mt: 1, ml: 115 }}
-                            >
+                            <Button variant="contained" color="primary" onClick={handleAddComment}>
                                 Añadir Comentario
                             </Button>
                         </Paper>
-                        <Grid container spacing={2} sx={{ mt: 1 }}>
-                            <Grid item xs={6}>
-                                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <Typography variant="h6">Evaluación:</Typography>
-                                    <Rating
-                                        name="simple-controlled"
-                                        value={newRating}
-                                        onChange={(event, newValue) => {
-                                            setNewRating(newValue);
-                                        }}
-                                        sx={{ mt: 1 }}
-                                    />
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleAddRating}
-                                        sx={{ mt: 1 }}
-                                    >
-                                        Añadir Evaluación
-                                    </Button>
-                                </Paper>
-                            </Grid>
-                            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={handleViewMoreServices}
-                                    sx={{ mb: 2 }}
-                                >
-                                    Ver Más Servicios
-                                </Button>
-                            </Grid>
-                        </Grid>
+                        <Paper sx={{ mt: 3, p: 2 }}>
+                            <Typography variant="h6">Evaluaciones:</Typography>
+                            <Rating
+                                name="average-rating"
+                                value={parseFloat(averageRating)}
+                                precision={0.1}
+                                readOnly
+                            />
+                            <Typography variant="body2" sx={{ ml: 2 }}>
+                                {averageRating} ({ratings.length} evaluaciones)
+                            </Typography>
+                            <Rating
+                                name="new-rating"
+                                value={newRating}
+                                onChange={(event, newValue) => {
+                                    setNewRating(newValue);
+                                }}
+                            />
+                            <Button variant="contained" color="primary" onClick={handleAddRating}>
+                                Añadir Evaluación
+                            </Button>
+                        </Paper>
+                        <Box sx={{ mt: 3 }}>
+                            <Button variant="outlined" onClick={handleViewMoreServices}>
+                                Ver Más Servicios
+                            </Button>
+                        </Box>
                     </>
                 ) : (
-                    <Typography variant="h5" sx={{ mt: 4 }}>No se han encontrado los datos de reserva.</Typography>
+                    <Typography variant="body1">No se encontraron datos de reserva válidos.</Typography>
                 )
             )}
         </Container>

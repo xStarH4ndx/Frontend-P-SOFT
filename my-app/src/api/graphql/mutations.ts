@@ -69,6 +69,8 @@ export const ACTUALIZAR_SERVICIO = gql`
       nombre
       costo
       direccion
+      fechaInicio
+      fechaFin
     }
   }
 `;

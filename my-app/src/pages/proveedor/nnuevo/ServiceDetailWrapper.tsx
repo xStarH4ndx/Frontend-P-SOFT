@@ -1,65 +1,194 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import ServiceDetailPage from "./ServiceDetailPage";
+import React, { useState } from 'react';
+import { Container, Grid, Typography, TextField, Button, CircularProgress, Snackbar, Paper, Avatar } from '@mui/material';
+import { useMutation } from '@apollo/client';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ACTUALIZAR_SERVICIO } from '../../../api/graphql/mutations';
 
-type ServiceType = {
-    ID_service: string;
-    Nombre: string;
-    fotos: string[];
-    Costo: number;
+interface LocationState {
+    id: number;
+    nombre: string;
+    costo: number;
     direccion: string;
-    tipoServicio: string;
-    horarios: string[]; // Nuevo campo para horarios
-};
+    autorNombreCompleto: string;
+    comentarios: string;
+    evaluaciones: number;
+    imagenUrl: string;
+    fechaInicio?: string;
+    fechaFin?: string;
+}
 
+const ServiceDetailWrapper: React.FC<{}> = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const {
+        id,
+        nombre,
+        costo,
+        direccion,
+        autorNombreCompleto,
+        comentarios,
+        evaluaciones,
+        imagenUrl,
+        fechaInicio: initialFechaInicio,
+        fechaFin: initialFechaFin,
+    } = location.state as LocationState;
 
+    const [fechaInicio, setFechaInicio] = useState<string>(initialFechaInicio || '');
+    const [fechaFin, setFechaFin] = useState<string>(initialFechaFin || '');
+    const [loading, setLoading] = useState<boolean>(false);
+    const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+    const [actualizarServicio] = useMutation(ACTUALIZAR_SERVICIO);
 
-const mockServices: ServiceType[] = [
-    {
-        ID_service: "1",
-        Nombre: "Servicio 1",
-        fotos: ["https://via.placeholder.com/150"],
-        Costo: 100,
-        direccion: "Dirección 1",
-        tipoServicio: "Tipo 1",
-        horarios: ["09:00 AM", "10:00 AM"] // Ejemplo de horarios
-    },
-    {
-        ID_service: "2",
-        Nombre: "Servicio 2",
-        fotos: ["https://via.placeholder.com/150"],
-        Costo: 200,
-        direccion: "Dirección 2",
-        tipoServicio: "Tipo 2",
-        horarios: ["11:00 AM", "12:00 PM"] // Ejemplo de horarios
-    }
-];
-
-
-const ServiceDetailWrapper: React.FC = () => {
-    const { serviceId } = useParams<{ serviceId: string }>();
-    const [service, setService] = useState<ServiceType | null>(null);
-
-    useEffect(() => {
-        const foundService = mockServices.find((s) => s.ID_service === serviceId);
-        setService(foundService || null);
-    }, [serviceId]);
-
-    const handleSave = (updatedService: ServiceType) => {
-        // Actualizar el servicio en el mockServices
-        const updatedServices = mockServices.map((s) =>
-            s.ID_service === updatedService.ID_service ? updatedService : s
-        );
-        setService(updatedService);
+    const handleAssignSchedule = async () => {
+        setLoading(true);
+        try {
+            const { data } = await actualizarServicio({
+                variables: {
+                    servicioDTO: {
+                        id,
+                        nombre,
+                        autor: 4, // Reemplazar con el autor adecuado si es dinámico
+                        fechaInicio,
+                        fechaFin,
+                    },
+                },
+            });
+            console.log('Servicio actualizado:', data);
+            setSnackbarOpen(true);
+        } catch (error: any) {
+            console.error('Error al actualizar el servicio:', error);
+            if (error.graphQLErrors) {
+                error.graphQLErrors.forEach(({ message, locations, path }: { message: string, locations: any[], path: string[] }) =>
+                    console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
+                );
+            }
+            if (error.networkError) {
+                console.log(`[Network error]: ${error.networkError}`);
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleDeleteService = () => {
-        // Eliminar el servicio del mockServices
-        const updatedServices = mockServices.filter((s) => s.ID_service !== serviceId);
-        setService(null); // Limpiar el servicio actual después de eliminarlo
-    };
-
-    return <ServiceDetailPage service={service} onSave={handleSave} onDelete={handleDeleteService} />;
+    return (
+        <Container>
+            <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
+                <Grid item xs={12}>
+                    <Typography variant="h4" gutterBottom>
+                        Detalles del Servicio
+                    </Typography>
+                    <Paper
+                        sx={{
+                            borderRadius: '1.5em',
+                            height: 'auto',
+                            mt: 3,
+                            display: 'flex',
+                            alignItems: 'center',
+                            p: 2,
+                        }}
+                    >
+                        <Grid container spacing={2}>
+                            <Grid
+                                item
+                                xs={3}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Avatar
+                                    src={imagenUrl}
+                                    sx={{ width: 150, height: 150 }}
+                                />
+                            </Grid>
+                            <Grid
+                                item
+                                xs={5}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Typography variant="h6">{`Servicio: ${nombre}`}</Typography>
+                                <Typography variant="body1">{`Autor: ${autorNombreCompleto}`}</Typography>
+                                <Typography variant="body1">{`Costo: ${costo}`}</Typography>
+                                <Typography variant="body1">{`Dirección: ${direccion}`}</Typography>
+                                <Typography variant="body1">{`Evaluaciones: ${evaluaciones}`}</Typography>
+                                <Typography variant="body1">{`Comentarios: ${comentarios}`}</Typography>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={4}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <TextField
+                                    label="Fecha Inicio"
+                                    type="datetime-local"
+                                    variant="outlined"
+                                    value={fechaInicio}
+                                    onChange={(e) => setFechaInicio(e.target.value)}
+                                    sx={{ mb: 2 }}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                                <TextField
+                                    label="Fecha Fin"
+                                    type="datetime-local"
+                                    variant="outlined"
+                                    value={fechaFin}
+                                    onChange={(e) => setFechaFin(e.target.value)}
+                                    sx={{ mb: 2 }}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleAssignSchedule}
+                                    disabled={loading}
+                                >
+                                    Asignar Horario
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
+            </Grid>
+            {loading && (
+                <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress color="primary" />
+                </Grid>
+            )}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                message="Horario Asignado"
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            />
+        </Container>
+    );
 };
 
 export default ServiceDetailWrapper;

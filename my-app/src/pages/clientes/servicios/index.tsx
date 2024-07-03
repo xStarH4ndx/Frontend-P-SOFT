@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {Container,Paper,Grid,Typography,Divider,TextField,Button,Menu,MenuItem,Avatar,CircularProgress,Snackbar} from "@mui/material";
-import { useNavigate } from "react-router";
+import { Container, Grid, Typography, Divider, TextField, Button, Menu, MenuItem, Avatar, CircularProgress, Snackbar, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { LISTAR_SERVICIOS } from "../../../api/graphql/queries";
 
@@ -20,8 +20,6 @@ interface Servicio {
     comentarios: string;
     img: string;
     autor: Autor;
-    fechaInicio:string;
-    fechaFinal:string;
 }
 
 const ServicePage: React.FC<{}> = () => {
@@ -66,9 +64,7 @@ const ServicePage: React.FC<{}> = () => {
         handleClose();
     };
 
-    const handleSearchChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value.toLowerCase();
         setSearchTerm(value);
         const filtered = elementos.filter(
@@ -83,19 +79,23 @@ const ServicePage: React.FC<{}> = () => {
         setLoadingRequest(true);
         setTimeout(() => {
             setLoadingRequest(false);
-            const autorNombreCompleto = `${elemento.autor.firstname} ${elemento.autor.lastname}`;
-            navigate(`/reservar/${elemento.id}/${elemento.fechaInicio}`, {
+            navigate(`/servicio/detalles`, {
                 state: {
-                    ...elemento,
-                    autorNombreCompleto,
+                    id: elemento.id,
+                    nombre: elemento.nombre,
+                    costo: elemento.costo,
+                    direccion: elemento.direccion,
+                    autorNombreCompleto: `${elemento.autor.firstname} ${elemento.autor.lastname}`,
                     comentarios: elemento.comentarios,
                     evaluaciones: elemento.evaluaciones,
+                    imagenUrl: elemento.img,
+                    fechaInicio: '',
+                    fechaFin: ''
                 },
             });
             setSnackbarOpen(true);
         }, 1500); // Simular una carga de 1.5 segundos antes de navegar
     };
-    
 
     return (
         <Container>
@@ -139,25 +139,13 @@ const ServicePage: React.FC<{}> = () => {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <MenuItem
-                                onClick={() =>
-                                    handleMenuItemClick("Mayor Precio")
-                                }
-                            >
+                            <MenuItem onClick={() => handleMenuItemClick("Mayor Precio")}>
                                 Mayor Precio
                             </MenuItem>
-                            <MenuItem
-                                onClick={() =>
-                                    handleMenuItemClick("Menor Precio")
-                                }
-                            >
+                            <MenuItem onClick={() => handleMenuItemClick("Menor Precio")}>
                                 Menor Precio
                             </MenuItem>
-                            <MenuItem
-                                onClick={() =>
-                                    handleMenuItemClick("Por evaluaciones")
-                                }
-                            >
+                            <MenuItem onClick={() => handleMenuItemClick("Por evaluaciones")}>
                                 Por evaluaciones
                             </MenuItem>
                         </Menu>
@@ -226,9 +214,7 @@ const ServicePage: React.FC<{}> = () => {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={() =>
-                                                handleRequestService(elemento)
-                                            }
+                                            onClick={() => handleRequestService(elemento)}
                                         >
                                             Solicitar
                                         </Button>
