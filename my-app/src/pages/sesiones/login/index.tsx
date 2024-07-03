@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNotification } from "../../../tools/context/notification.context";
 import { useNavigate, Link } from "react-router-dom";
-import { useQuery } from '@apollo/client';
+import { useQuery, gql, useApolloClient } from '@apollo/client';
+import {jwtDecode} from 'jwt-decode'; // Importa jwt-decode
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -9,17 +10,17 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { ACCEDER_QUERY } from '../../../api/graphql/queries'
+import { OBTENER_USUARIO, ACCEDER_QUERY } from "../../../api/graphql/queries";
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
+    const client = useApolloClient();
     const { getError, getSuccess } = useNotification();
     const [loginData, setLoginData] = useState({
         username: "",
         password: "",
-        
     });
-  
+
     const { loading, error, data, refetch } = useQuery(ACCEDER_QUERY, {
         skip: true,
     });
@@ -31,6 +32,7 @@ export const LoginPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Datos de inicio de sesión:", loginData);
 
         try {
             const { data } = await refetch({
@@ -40,19 +42,33 @@ export const LoginPage: React.FC = () => {
 
             if (data && data.acceder) {
                 console.log("Respuesta exitosa del servidor:", data);
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('access_token', data.acceder.access_token);
+                const accessToken = data.acceder.access_token;
+                localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refresh_token', data.acceder.refresh_token);
 
-                getSuccess("Inicio de sesión exitoso");
-                navigate("/");
-                
-                
+                // Decodificar el token JWT para obtener los datos del usuario
+                const decodedToken: any = jwtDecode(accessToken);
+                console.log("Datos del usuario logueado:", decodedToken);
+                const userId = decodedToken.id;
+                console.log("El id del usuario logueado es:", userId);
+
+                // Obtener detalles del usuario
+                const { data: userData } = await client.query({
+                    query: OBTENER_USUARIO,
+                    variables: { id: userId },
+                });
+
+                if (userData && userData.obtenerUsuario) {
+                    localStorage.setItem('user', JSON.stringify(userData.obtenerUsuario));
+                    getSuccess("Inicio de sesión exitoso");
+                    navigate("/");
+                } else {
+                    getError("No se pudieron obtener los detalles del usuario");
+                }
             } else {
                 getError("Usuario o contraseña incorrectos");
             }
         } catch (error) {
-            
             console.error("Error en la solicitud:", error);
             getError("Ocurrió un error al intentar iniciar sesión");
         }
