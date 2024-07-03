@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Typography, Grid, Box, Avatar, Button, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Cambiar useHistory por useNavigate
+import { useNavigate } from "react-router-dom";
 
 type ServiceType = {
     ID_service: string;
@@ -23,7 +23,7 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
     const [editedService, setEditedService] = useState<ServiceType | null>(service);
     const [newHorario, setNewHorario] = useState<string>("");
 
-    const navigate = useNavigate(); // Usar useNavigate en lugar de useHistory
+    const navigate = useNavigate();
 
     const handleEditService = () => {
         setIsEditing(true);
@@ -89,7 +89,7 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
     };
 
     const handleReserveHour = (horario: string) => {
-        navigate(`/solicitud-servicio/${service?.ID_service}/${horario}`);
+        navigate(`/reservar/${service?.ID_service}/${horario}`);
     };
 
     if (!service) {

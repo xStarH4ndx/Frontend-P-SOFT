@@ -22,7 +22,7 @@ export const AppRouter: React.FC<{}> = () =>{
             <Route path="/" element={<RouterLayout/>}>
                 <Route path="/" element={<HomePage/>} />
                 <Route path="/servicios" element={<ServicePage/>} />
-                <Route path="/servicios/confirmacion" element={<ConfirmServicePage/>} />
+                
                 <Route path="/perfil" element={<Perfil />} />
                 <Route path="/mis-servicios" element={<UserServicePage />} />
                 <Route path="/crear-servicio" element={<CreateServicePage />} />
@@ -34,7 +34,8 @@ export const AppRouter: React.FC<{}> = () =>{
             <Route path="/resetearPass" element={<ResetPasswordPage />} />
             <Route path="/registro" element={<RegisterPage/>} />
 
-            <Route path="/solicitud-servicio/:id_servicio/:horario" element={<ReservationPage/>} />
+            <Route path="/reservar/:idService/:horario" element={<ReservationPage />} />
+            <Route path="/solicitud-servicio/:idService" element={<ConfirmServicePage />} />
         </Routes>
     );
 };

@@ -38,9 +38,6 @@ const ReservationPage: React.FC = () => {
             <Typography variant="h4" gutterBottom>
                 Reservar Servicio
             </Typography>
-            <Typography variant="h6">
-                Servicio ID: {id_servicio}
-            </Typography>
             <Typography variant="h6" gutterBottom>
                 Horario Seleccionado: {horario}
             </Typography>
