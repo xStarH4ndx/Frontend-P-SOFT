@@ -3,21 +3,10 @@ PedidosNow - Proyecto Software
 
 
 
-# INSTALACIONES EXTRAS
+# PASOS A SEGUIR
 
-PRIMER PASO: escribir cd my-app
-SEGUNDO PASO:
-npm install react-router-dom@6
+Escribir en la terminal lo siguiente:
 
-npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
-npm install @react-google-maps/api
-npm install @apollo/client graphql
-npm install yupi
-
-# DECORACIONES
-D2691E --- COLOR CAFÉ
-
-
-Navbar Usuario:
-- crear Servicio
-- 
+1) cd my-app
+2) npm install
+3) npm start
