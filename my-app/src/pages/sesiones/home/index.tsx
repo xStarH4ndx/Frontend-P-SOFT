@@ -59,11 +59,16 @@ export const HomePage: React.FC<{}> = () => {
     .slice(0, 3);
 
   const handleClickVerServicios = () => {
-    setLoading(true); // Activar la pantalla de carga
+    if (!isLoggedIn) {
+      navigate("/login"); // Redirige a la página de login si el usuario no está autenticado
+      return;
+    }
+
+    setLoading(true);
     setTimeout(() => {
-      setLoading(false); // Desactivar la pantalla de carga después de 1.5 segundos
+      setLoading(false);
       navigate("servicios");
-    }, 1500); // 1.5 segundos
+    }, 1500);
   };
 
   const handleRequestService = (elemento: Servicio) => {

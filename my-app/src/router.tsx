@@ -24,16 +24,15 @@ export const AppRouter: React.FC<{}> = () =>{
                 <Route path="/servicios" element={<ServicePage/>} />
                 
                 <Route path="/perfil" element={<Perfil />} />
+                <Route path="/mis-servicios" element={<UserServicePage />} />
+                <Route path="/crear-servicio" element={<CreateServicePage />} />
+                <Route path="/editar-servicio/:serviceId" element={<EditServicePage />} />
+                <Route path="/servicio/:serviceId" element={<ServiceDetailWrapper />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/recuperarContra" element={<RecoveryPage />} />
             <Route path="/resetearPass" element={<ResetPasswordPage />} />
             <Route path="/registro" element={<RegisterPage/>} />
-            <Route path="/mis-servicios" element={<UserServicePage />} />
-            <Route path="/crear-servicio" element={<CreateServicePage />} />
-            <Route path="/editar-servicio/:serviceId" element={<EditServicePage />} />
-            <Route path="/" element={<UserServicePage />} />
-            <Route path="/servicio/:serviceId" element={<ServiceDetailWrapper />} />
 
             <Route path="/reservar/:id_servicio/:horario" element={<ReservationPage />} />
             <Route path="/confirmar-servicio" element={<ConfirmServicePage />} />
