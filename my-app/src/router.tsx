@@ -35,8 +35,8 @@ export const AppRouter: React.FC<{}> = () =>{
             <Route path="/" element={<UserServicePage />} />
             <Route path="/servicio/:serviceId" element={<ServiceDetailWrapper />} />
 
-            <Route path="/reservar/:idService/:horario" element={<ReservationPage />} />
-            <Route path="/solicitud-servicio/:idService" element={<ConfirmServicePage />} />
+            <Route path="/reservar/:id_servicio/:horario" element={<ReservationPage />} />
+            <Route path="/confirmar-servicio" element={<ConfirmServicePage />} />
         </Routes>
     );
 };

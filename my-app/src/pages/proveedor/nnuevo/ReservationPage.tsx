@@ -29,8 +29,8 @@ const ReservationPage: React.FC = () => {
         // Aquí puedes manejar la lógica para guardar la reserva, por ejemplo, enviando los datos a un servidor.
         console.log("Datos de la reserva:", reservationData);
 
-        // Después de guardar la reserva, puedes redirigir al usuario a otra página.
-        navigate(`/detalle-servicio/${id_servicio}`);
+        // Navegar a ConfirmServicePage y pasar los datos de la reserva como estado de ubicación
+        navigate(`/confirmar-servicio`, { state: { ...reservationData } });
     };
 
     return (
