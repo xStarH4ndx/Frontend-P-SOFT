@@ -1,24 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { AppBar, Box, Button, Container, Grid, Stack, Toolbar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Logo from '../assets/images/logo-empresa.png';
-import { useNavigate } from "react-router";
 
 export const NavBar: React.FC<{}> = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [userRole, setUserRole] = useState<number | null>(null);
 
     useEffect(() => {  
         const checkLoggedInStatus = () => {
-            const userLoggedIn = localStorage.getItem('isLoggedIn');
-            setIsLoggedIn(userLoggedIn === 'true');
+            const accessToken = localStorage.getItem('accessToken');
+            const user = localStorage.getItem('user');
+            setIsLoggedIn(!!accessToken);
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    if (userData && userData.roles && userData.roles.length > 0) {
+                        setUserRole(userData.roles[0].id);
+                    }
+                } catch (error) {
+                    console.error("Error parsing user data:", error);
+                }
+            }
         };
 
         checkLoggedInStatus();
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
         setIsLoggedIn(false);
+        setUserRole(null);
         navigate("/");
     };
 
@@ -44,8 +59,14 @@ export const NavBar: React.FC<{}> = () => {
                                 <Stack direction="row" spacing={2}>
                                     {isLoggedIn ? (
                                         <>
-                                            <Button variant="contained" onClick={() => navigate("/mis-servicios")}>Mis Servicios</Button>
-                                            <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
+
+                                            {userRole === 1 && (
+                                                <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
+                                            )}
+                                            {userRole === 2 && (
+                                                <Button variant="contained" onClick={() => navigate("/mis-servicios")}>Mis Servicios</Button>
+                                            )}
+
                                             <Button variant="outlined" onClick={handleLogout}>Logout</Button>
                                         </>
                                     ) : (
