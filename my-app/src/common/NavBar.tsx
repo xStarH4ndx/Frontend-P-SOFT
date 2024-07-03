@@ -57,9 +57,12 @@ export const NavBar: React.FC<{}> = () => {
                             </Grid>
                             <Grid item container alignItems="center" xs={2}>
                                 <Stack direction="row" spacing={2}>
+                                    {/* Condición para mostrar el botón de Inicio solo para usuarios normales */}
+                                    {isLoggedIn && userRole === 1 && (
+                                        <Button variant="text" onClick={() => navigate("/")}>Inicio</Button>
+                                    )}
                                     {isLoggedIn ? (
                                         <>
-
                                             {userRole === 1 && (
                                                 <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
                                             )}
@@ -75,6 +78,7 @@ export const NavBar: React.FC<{}> = () => {
                                             <Button variant="outlined" onClick={() => navigate("/registro")}>Sign in</Button>
                                         </>
                                     )}
+
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -84,4 +88,3 @@ export const NavBar: React.FC<{}> = () => {
         </Box>
     );
 };
-

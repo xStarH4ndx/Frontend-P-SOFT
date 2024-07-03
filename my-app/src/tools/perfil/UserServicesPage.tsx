@@ -1,4 +1,3 @@
-// UserServicePage.tsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Paper, Typography, Box, Grid, Button, Avatar } from "@mui/material";
@@ -29,7 +28,9 @@ const UserServicePage: React.FC = () => {
         navigate(`/editar-servicio/${serviceId}`);
     };
 
-    
+    const handleCreateService = () => {
+        navigate("/crear-servicio");
+    };
 
     const handleDeleteService = (serviceId: string) => {
         const updatedServices = services.filter(service => service.ID_service !== serviceId);
@@ -41,7 +42,7 @@ const UserServicePage: React.FC = () => {
         <Container>
             <Grid container direction="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
                 <Typography variant="h4" gutterBottom>Mis Servicios</Typography>
-                <Button variant="contained" color="primary" onClick={() => alert('Crear servicio no implementado aún')}>
+                <Button variant="contained" color="primary" onClick={handleCreateService}>
                     Crear Nuevo Servicio
                 </Button>
                 <Grid container direction="column" alignItems="center" justifyContent="center" sx={{ mt: 2, width: '100%' }}>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNotification } from "../../../tools/context/notification.context";
 import { useNavigate, Link } from "react-router-dom";
 import { useQuery, gql, useApolloClient } from '@apollo/client';
-import {jwtDecode} from 'jwt-decode'; // Importa jwt-decode
+import {jwtDecode} from 'jwt-decode'; // Importa jwt-decode correctamente
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -45,6 +45,7 @@ export const LoginPage: React.FC = () => {
                 const accessToken = data.acceder.access_token;
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refresh_token', data.acceder.refresh_token);
+                localStorage.setItem('isLoggedIn', 'true');
 
                 // Decodificar el token JWT para obtener los datos del usuario
                 const decodedToken: any = jwtDecode(accessToken);
@@ -60,8 +61,17 @@ export const LoginPage: React.FC = () => {
 
                 if (userData && userData.obtenerUsuario) {
                     localStorage.setItem('user', JSON.stringify(userData.obtenerUsuario));
+                    localStorage.setItem('isLoggedIn', 'true');
                     getSuccess("Inicio de sesión exitoso");
-                    navigate("/");
+
+                    // Verificar el rol del usuario
+                    const userRoles = userData.obtenerUsuario.roles;
+                    const isProveedor = userRoles.some((role: any) => role.id === 2);
+                    if (isProveedor) {
+                        navigate("/mis-servicios");
+                    } else {
+                        navigate("/");
+                    }
                 } else {
                     getError("No se pudieron obtener los detalles del usuario");
                 }
