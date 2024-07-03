@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Container, Typography, Grid, Box, Avatar, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,8 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
     const [isEditing, setIsEditing] = useState(false);
     const [editedService, setEditedService] = useState<ServiceType | null>(service);
     const [newHorario, setNewHorario] = useState<string>("");
+    const [editedImage, setEditedImage] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
 
@@ -32,6 +34,12 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
 
     const handleSaveService = () => {
         if (editedService) {
+            if (editedImage) {
+                setEditedService({
+                    ...editedService,
+                    fotos: [editedImage, ...editedService.fotos.slice(1)]
+                });
+            }
             onSave(editedService);
             setIsEditing(false);
         }
@@ -40,6 +48,7 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
     const handleCancelEdit = () => {
         setIsEditing(false);
         setEditedService(service);
+        setEditedImage(null);
     };
 
     const handleDeleteService = () => {
@@ -92,6 +101,23 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         navigate(`/reservar/${editedService?.ID_service}/${encodeURIComponent(horario)}`);
     };
 
+    const handleImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setEditedImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     if (!service) {
         return (
             <Container>
@@ -110,23 +136,30 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                             height: 0,
                             paddingBottom: '100%',
                             position: 'relative',
-                            backgroundColor: '#4682B4'
+                            backgroundColor: '#4682B4',
+                            cursor: isEditing ? 'pointer' : 'default'
                         }}
+                        onClick={isEditing ? handleImageClick : undefined}
                     >
-                        {service.fotos.length > 0 && (
-                            <Avatar
-                                src={service.fotos[0]}
-                                variant="square"
-                                sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    borderRadius: '0.5em'
-                                }}
-                            />
-                        )}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleImageChange}
+                            accept="image/*"
+                        />
+                        <Avatar
+                            src={editedImage || service.fotos[0]}
+                            variant="square"
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                borderRadius: '0.5em'
+                            }}
+                        />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={8}>
@@ -255,4 +288,6 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
 };
 
 export default ServiceDetailPage;
+
+
 
