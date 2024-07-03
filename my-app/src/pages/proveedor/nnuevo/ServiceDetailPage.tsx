@@ -89,7 +89,7 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
     };
 
     const handleReserveHour = (horario: string) => {
-        navigate(`/reservar/${service?.ID_service}/${horario}`);
+        navigate(`/reservar/${editedService?.ID_service}/${encodeURIComponent(horario)}`);
     };
 
     if (!service) {
@@ -255,3 +255,4 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
 };
 
 export default ServiceDetailPage;
+

@@ -2,6 +2,7 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
-    "@react-navigation/stack": "^6.3.29"
+    "@react-navigation/stack": "^6.3.29",
+    "jwt-decode": "^4.0.0"
   }
 }

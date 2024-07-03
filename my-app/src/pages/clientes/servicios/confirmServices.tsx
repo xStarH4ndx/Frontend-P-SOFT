@@ -4,11 +4,19 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { EVALUAR_SERVICIO, COMENTAR_SERVICIO } from "../../../api/graphql/mutations";
 
+type ReservationData = {
+    serviceId: string;
+    horario: string;
+    userName: string;
+    userContact: string;
+    additionalInfo?: string;
+};
+
 const ConfirmServicePage: React.FC<{}> = () => {
     const navigate = useNavigate();
-    const { idService, horario } = useParams<{ idService: string; horario: string }>();
     const location = useLocation();
-    const serviceData = location.state;
+    const { idService, horario } = useParams<{ idService: string; horario: string }>();
+    const reservationData = location.state as ReservationData;
 
     const [newComment, setNewComment] = useState<string>("");
     const [newRating, setNewRating] = useState<number | null>(null);
@@ -20,20 +28,25 @@ const ConfirmServicePage: React.FC<{}> = () => {
     const [addRating] = useMutation(EVALUAR_SERVICIO);
 
     useEffect(() => {
-        if (serviceData) {
-            setComments(serviceData.comentarios || []);
-            setRatings(serviceData.evaluaciones || []);
+        if (reservationData) {
+            // Simulación de carga de datos
+            setTimeout(() => {
+                setComments([
+                    { comentario: "¡Excelente servicio!", usuario: { firstname: "Usuario", lastname: "Ejemplo", avatar: "" } }
+                ]);
+                setRatings([5]);
+            }, 1000);
         } else {
-            console.error("No se han encontrado los datos del servicio en el estado.");
+            console.error("No se han encontrado los datos de reserva en el estado.");
         }
-    }, [serviceData]);
+    }, [reservationData]);
 
     const handleAddComment = async () => {
         if (newComment.trim() !== "") {
             try {
                 const { data } = await addComment({
                     variables: {
-                        servicioId: serviceData.id,
+                        servicioId: reservationData.serviceId,
                         usuarioId: 21,  // Asegúrate de tener el ID del usuario correcto
                         comentarioDTO: {
                             comentario: newComment,
@@ -55,7 +68,7 @@ const ConfirmServicePage: React.FC<{}> = () => {
             try {
                 const { data } = await addRating({
                     variables: {
-                        servicioId: serviceData.id,
+                        servicioId: reservationData.serviceId,
                         usuarioId: 21,  // Asegúrate de tener el ID del usuario correcto
                         evaluacionDTO: {
                             puntuacion: newRating,
@@ -99,7 +112,7 @@ const ConfirmServicePage: React.FC<{}> = () => {
                     <CircularProgress />
                 </Box>
             ) : (
-                serviceData ? (
+                reservationData ? (
                     <>
                         <Grid container justifyContent="center">
                             <Typography variant="h4" sx={{ mt: 2, mb: 2 }}>
@@ -119,7 +132,7 @@ const ConfirmServicePage: React.FC<{}> = () => {
                                     }}
                                 >
                                     <Avatar
-                                        src={serviceData.img}
+                                        src={""}  // Asegúrate de tener la imagen correcta
                                         sx={{ width: 150, height: 150 }}
                                     />
                                 </Grid>
@@ -132,28 +145,10 @@ const ConfirmServicePage: React.FC<{}> = () => {
                                         justifyContent: "center",
                                     }}
                                 >
-                                    <Typography variant="h6">{`Servicio: ${serviceData.nombre}`}</Typography>
-                                    {serviceData.autor && (
-                                        <Typography variant="body1">{`Autor: ${serviceData.autor.firstname} ${serviceData.autor.lastname}`}</Typography>
-                                    )}
-                                    <Typography variant="body1">{`Dirección: ${serviceData.direccion}`}</Typography>
-                                    <Typography variant="body1">{`Ranking: ${averageRating}`}</Typography>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={4}
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Divider sx={{ mb: 1 }} />
-                                    <Typography
-                                        variant="h6"
-                                        sx={{ color: "#1d4ed8", mb: 2 }}
-                                    >{`Precio: ${serviceData.costo} CLP`}</Typography>
-                                    <Divider sx={{ mb: 1 }} />
+                                    <Typography variant="h6">{`Servicio: ${reservationData.serviceId}`}</Typography>
+                                    <Typography variant="body1">{`Horario: ${reservationData.horario}`}</Typography>
+                                    <Typography variant="body1">{`Usuario: ${reservationData.userName}`}</Typography>
+                                    <Typography variant="body1">{`Contacto: ${reservationData.userContact}`}</Typography>
                                 </Grid>
                             </Grid>
                         </Paper>
@@ -234,7 +229,7 @@ const ConfirmServicePage: React.FC<{}> = () => {
                         </Grid>
                     </>
                 ) : (
-                    <Typography variant="h5" sx={{ mt: 4 }}>No se han encontrado los datos del servicio.</Typography>
+                    <Typography variant="h5" sx={{ mt: 4 }}>No se han encontrado los datos de reserva.</Typography>
                 )
             )}
         </Container>
