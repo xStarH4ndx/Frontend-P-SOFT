@@ -59,12 +59,14 @@ export const NavBar: React.FC<{}> = () => {
                                 <Stack direction="row" spacing={2}>
                                     {isLoggedIn ? (
                                         <>
+
                                             {userRole === 1 && (
                                                 <Button variant="contained" onClick={() => navigate("/perfil")}>Perfil</Button>
                                             )}
                                             {userRole === 2 && (
                                                 <Button variant="contained" onClick={() => navigate("/mis-servicios")}>Mis Servicios</Button>
                                             )}
+
                                             <Button variant="outlined" onClick={handleLogout}>Logout</Button>
                                         </>
                                     ) : (
@@ -82,3 +84,4 @@ export const NavBar: React.FC<{}> = () => {
         </Box>
     );
 };
+

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Typography, Grid, Box, Avatar, Button, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Cambiar useHistory por useNavigate
 
 type ServiceType = {
     ID_service: string;
@@ -8,6 +9,7 @@ type ServiceType = {
     Costo: number;
     direccion: string;
     tipoServicio: string;
+    horarios: string[];
 };
 
 interface ServiceDetailPageProps {
@@ -19,17 +21,13 @@ interface ServiceDetailPageProps {
 const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedService, setEditedService] = useState<ServiceType | null>(service);
+    const [newHorario, setNewHorario] = useState<string>("");
 
-    if (!service) {
-        return (
-            <Container>
-                <Typography variant="h4">Servicio no encontrado</Typography>
-            </Container>
-        );
-    }
+    const navigate = useNavigate(); // Usar useNavigate en lugar de useHistory
 
     const handleEditService = () => {
         setIsEditing(true);
+        setEditedService(service);
     };
 
     const handleSaveService = () => {
@@ -37,6 +35,15 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
             onSave(editedService);
             setIsEditing(false);
         }
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setEditedService(service);
+    };
+
+    const handleDeleteService = () => {
+        onDelete();
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,14 +56,49 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
         }
     };
 
-    const handleCancelEdit = () => {
-        setIsEditing(false);
-        setEditedService(service); // Reiniciar cambios
+    const handleChangeHorario = (index: number, value: string) => {
+        if (editedService) {
+            const updatedHorarios = [...editedService.horarios];
+            updatedHorarios[index] = value;
+            setEditedService({
+                ...editedService,
+                horarios: updatedHorarios
+            });
+        }
     };
 
-    const handleDeleteService = () => {
-        onDelete();
+    const handleDeleteHorario = (index: number) => {
+        if (editedService) {
+            const updatedHorarios = [...editedService.horarios];
+            updatedHorarios.splice(index, 1);
+            setEditedService({
+                ...editedService,
+                horarios: updatedHorarios
+            });
+        }
     };
+
+    const handleAddHorario = () => {
+        if (editedService && newHorario.trim() !== "") {
+            setEditedService({
+                ...editedService,
+                horarios: [...editedService.horarios, newHorario]
+            });
+            setNewHorario("");
+        }
+    };
+
+    const handleReserveHour = (horario: string) => {
+        navigate(`/solicitud-servicio/${service?.ID_service}/${horario}`);
+    };
+
+    if (!service) {
+        return (
+            <Container>
+                <Typography variant="h4">Servicio no encontrado</Typography>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="md">
@@ -68,7 +110,7 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                             height: 0,
                             paddingBottom: '100%',
                             position: 'relative',
-                            backgroundColor: '#4682B4' // Celeste más oscuro
+                            backgroundColor: '#4682B4'
                         }}
                     >
                         {service.fotos.length > 0 && (
@@ -133,6 +175,43 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                                     type="number"
                                 />
                                 <Box sx={{ mt: 2 }}>
+                                    <Typography variant="h6">Editar Horarios:</Typography>
+                                    {editedService?.horarios.map((horario, index) => (
+                                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                                            <TextField
+                                                value={horario}
+                                                onChange={(e) => handleChangeHorario(index, e.target.value)}
+                                                fullWidth
+                                                margin="normal"
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                color="error"
+                                                onClick={() => handleDeleteHorario(index)}
+                                                sx={{ ml: 2 }}
+                                            >
+                                                Eliminar
+                                            </Button>
+                                        </Box>
+                                    ))}
+                                    <Box sx={{ mt: 2 }}>
+                                        <TextField
+                                            value={newHorario}
+                                            onChange={(e) => setNewHorario(e.target.value)}
+                                            fullWidth
+                                            margin="normal"
+                                            placeholder="Agregar nuevo horario"
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleAddHorario}
+                                            sx={{ mt: 1 }}
+                                        >
+                                            Agregar Horario
+                                        </Button>
+                                    </Box>
+                                </Box>
+                                <Box sx={{ mt: 2 }}>
                                     <Button variant="contained" color="primary" onClick={handleSaveService} sx={{ mr: 2 }}>Guardar</Button>
                                     <Button variant="contained" onClick={handleCancelEdit}>Cancelar</Button>
                                 </Box>
@@ -152,6 +231,20 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
                                         Eliminar
                                     </Button>
                                 </Box>
+                                <Box sx={{ mt: 2 }}>
+                                    <Typography variant="h6">Horarios:</Typography>
+                                    {service.horarios.map((horario, index) => (
+                                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                                            <Button
+                                                variant="outlined"
+                                                onClick={() => handleReserveHour(horario)}
+                                                sx={{ borderColor: 'black', color: 'black', mr: 2 }}
+                                            >
+                                                {horario}
+                                            </Button>
+                                        </Box>
+                                    ))}
+                                </Box>
                             </>
                         )}
                     </Box>
@@ -162,5 +255,3 @@ const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onSave, 
 };
 
 export default ServiceDetailPage;
-
-

@@ -4,26 +4,27 @@ import { Container, Button, Grid, Paper, Box, Typography, TextField } from '@mui
 type ServiceType = {
     ID_service: string;
     Nombre: string;
-    fotos: string[]; // Cambiado a una lista de URLs de imágenes
-    Costo: number; // Cambiado a un tipo numérico para el precio
+    fotos: string[];
+    Costo: number;
     direccion: string;
     tipoServicio: string;
+    horarios: string[]; // Nuevo campo para horarios
 };
 
 export const enviarReseñaAlServidor = async (id: string, puntuacion: string, comentario: string) => {
-        // Aquí es donde enviarías los datos al servidor. 
-        const respuesta = await fetch('/ruta/a/tu/api', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id, puntuacion, comentario }),
-        });
+    // Aquí es donde enviarías los datos al servidor. 
+    const respuesta = await fetch('/ruta/a/tu/api', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, puntuacion, comentario }),
+    });
 
-        if (!respuesta.ok) {
-            throw new Error('Error al enviar la reseña');
-        }
-    };
+    if (!respuesta.ok) {
+        throw new Error('Error al enviar la reseña');
+    }
+};
 
 export const CreateServicePage: React.FC<{}> = () => {
     const [serviceData, setServiceData] = useState<ServiceType>({
@@ -33,6 +34,7 @@ export const CreateServicePage: React.FC<{}> = () => {
         Costo: 0,
         direccion: "",
         tipoServicio: "",
+        horarios: [], // Inicializado como un arreglo vacío
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +69,6 @@ export const CreateServicePage: React.FC<{}> = () => {
             }
         }
     };
-
-    
 
     return (
         <Container maxWidth="sm">

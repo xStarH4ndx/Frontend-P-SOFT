@@ -13,7 +13,8 @@ type ServiceType = {
     Costo: number;
     direccion: string;
     tipoServicio: string;
-    usuario: string;
+    horarios: string[];
+    usuario: string; // Añadido aquí
 };
 
 type UserContextType = {
@@ -35,6 +36,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             tipoServicio: 'Limpieza',
             Costo: 50,
             fotos: ['https://via.placeholder.com/150'],
+            horarios: ["09:00 AM", "10:00 AM"],
             usuario: 'user1'
         },
         {
@@ -44,6 +46,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             tipoServicio: 'Jardinería',
             Costo: 70,
             fotos: ['https://via.placeholder.com/150'],
+            horarios: ["11:00 AM", "12:00 PM"],
             usuario: 'user2'
         }
     ]);

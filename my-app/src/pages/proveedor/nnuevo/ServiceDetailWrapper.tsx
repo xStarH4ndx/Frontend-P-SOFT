@@ -9,7 +9,10 @@ type ServiceType = {
     Costo: number;
     direccion: string;
     tipoServicio: string;
+    horarios: string[]; // Nuevo campo para horarios
 };
+
+
 
 const mockServices: ServiceType[] = [
     {
@@ -19,6 +22,7 @@ const mockServices: ServiceType[] = [
         Costo: 100,
         direccion: "Dirección 1",
         tipoServicio: "Tipo 1",
+        horarios: ["09:00 AM", "10:00 AM"] // Ejemplo de horarios
     },
     {
         ID_service: "2",
@@ -27,9 +31,10 @@ const mockServices: ServiceType[] = [
         Costo: 200,
         direccion: "Dirección 2",
         tipoServicio: "Tipo 2",
+        horarios: ["11:00 AM", "12:00 PM"] // Ejemplo de horarios
     }
-    // Otros servicios de ejemplo
 ];
+
 
 const ServiceDetailWrapper: React.FC = () => {
     const { serviceId } = useParams<{ serviceId: string }>();
